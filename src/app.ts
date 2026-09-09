@@ -77,7 +77,7 @@ app.use("/api/v1/analytics",AnalyticsRoutes)
 
 //default get
 app.get("/", (req: Request, res: Response) => {
-  res.send("Next level assignment 6 and Load Shedding & Power Management server is running");
+  res.send("Power Pulse - Load Shedding & Power Management server is running");
 });
 
 
