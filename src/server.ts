@@ -39,7 +39,7 @@ const main = async () => {
 		console.log("NOdema iler connected");
 
 		app.listen(port, () => {
-			console.log(`Next Level Assignment 6 server is running on port ${port}`);
+			console.log(`Power Pulse--Load shedding and power management server is running on port ${port}`);
 		});
 
 

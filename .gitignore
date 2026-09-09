@@ -5,3 +5,8 @@ node_modules
 /generated/prisma
 
 .vercel
+
+
+dist
+
+.git
