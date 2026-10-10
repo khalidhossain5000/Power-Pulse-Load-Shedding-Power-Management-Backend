@@ -89,7 +89,11 @@ const techProfile=await prisma.technicianProfile.findUnique({
 
 
 if(!techProfile){
+<<<<<<< HEAD
     throw new AppError(httpStatus.NOT_FOUND,"Technican  profile is not exist")
+=======
+    throw new AppError(httpStatus.NOT_FOUND,"Technican profile is not exist")
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 }
 
 

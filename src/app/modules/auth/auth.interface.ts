@@ -16,9 +16,12 @@ export interface IVerifyEmailPayload{
     otp:string
 }
 
+<<<<<<< HEAD
 export interface IResendOtpPayload{
     email:string;
 }
+=======
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 
 
 export interface ILoginUserPayload{

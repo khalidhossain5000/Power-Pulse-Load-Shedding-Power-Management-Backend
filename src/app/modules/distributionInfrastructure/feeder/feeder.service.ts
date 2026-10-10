@@ -71,7 +71,12 @@ const getAllFeederFromDb = async (query: IQuery) => {
         },
         include: {
             areas: true,
+<<<<<<< HEAD
             substation: true
+=======
+            substation: true,
+            zone: true
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
         }
     })
 
@@ -108,7 +113,11 @@ const getFeederDetails = async (feederId: string) => {
         {
             areas: true,
             substation: true,
+<<<<<<< HEAD
             
+=======
+            zone: true
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
         }
     })
     return substationDetails

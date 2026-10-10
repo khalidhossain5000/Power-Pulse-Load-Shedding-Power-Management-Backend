@@ -352,7 +352,10 @@ var config_default = {
   node_env: process.env.NODE_ENV,
   port: process.env.PORT,
   database_url: process.env.DATABASE_URL,
+<<<<<<< HEAD
   cors_url: process.env.CORS_URL,
+=======
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
   app_url: process.env.APP_URL,
   frontend_url: process.env.FRONTEND_URL,
   bcrypt_salt_rounds: process.env.BCRYPT_SALT_ROUNDS,
@@ -439,10 +442,17 @@ var globalErrorHandler = async (err, _req, res, _next) => {
   res.status(statusCode).json({
     success: false,
     statusCode: statusCode || import_http_status.default.INTERNAL_SERVER_ERROR,
+<<<<<<< HEAD
     name: config_default.node_env === "production" ? errorName : "Internal Server Error",
     message: config_default.node_env === "production" ? errorMessage : "Internal Server Error",
     error: config_default.node_env === "production" ? err : void 0,
     stack: config_default.node_env === "production" ? err.stack : void 0
+=======
+    name: config_default.node_env === "development" ? errorName : "Internal Server Error",
+    message: config_default.node_env === "development" ? errorMessage : "Internal Server Error",
+    error: config_default.node_env === "development" ? err : void 0,
+    stack: config_default.node_env === "development" ? err.stack : void 0
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
   });
 };
 
@@ -606,6 +616,7 @@ var registerUserInDb = async (payload) => {
     html
   });
 };
+<<<<<<< HEAD
 var resendOtpForRegistration = async (payload) => {
   const email = payload.email.trim().toLowerCase();
   const existingUser = await prisma.user.findUnique({
@@ -648,6 +659,8 @@ var resendOtpForRegistration = async (payload) => {
     html
   });
 };
+=======
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 var verifyOtpAndCreateUser = async (payload) => {
   const { otp } = payload;
   const email = payload.email.trim().toLowerCase();
@@ -878,7 +891,11 @@ var googleLogin = async (payload) => {
     if (!payload.role) {
       throw new AppError(
         import_http_status3.default.BAD_REQUEST,
+<<<<<<< HEAD
         "You are not registered yet. Please register first."
+=======
+        "Role is required for new Google registration"
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
       );
     }
     if (payload.role !== Role.CUSTOMER && payload.role !== Role.TECHNICIAN) {
@@ -959,6 +976,7 @@ var getMe = async (user) => {
   }
   return isUserExists;
 };
+<<<<<<< HEAD
 var getTechnicianCount = async () => {
   return prisma.user.count({
     where: {
@@ -966,6 +984,8 @@ var getTechnicianCount = async () => {
     }
   });
 };
+=======
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 var updateUserProfileInDb = async (payload, profileImage, userId) => {
   let profileImageUrl = null;
   let profileImagePublicId = null;
@@ -1017,13 +1037,19 @@ var updateUserProfileInDb = async (payload, profileImage, userId) => {
 };
 var authServices = {
   registerUserInDb,
+<<<<<<< HEAD
   resendOtpForRegistration,
+=======
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
   verifyOtpAndCreateUser,
   loginUser,
   refreshToken,
   googleLogin,
   getMe,
+<<<<<<< HEAD
   getTechnicianCount,
+=======
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
   updateUserProfileInDb
 };
 
@@ -1055,15 +1081,25 @@ var verifyUserEmail = catchAsync(async (req, res) => {
   const { accessToken, refreshToken: refreshToken3, createdUser } = result;
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
+<<<<<<< HEAD
     secure: config_default.node_env === "development" ? false : true,
     sameSite: config_default.node_env === "development" ? "lax" : "none",
+=======
+    secure: false,
+    sameSite: "none",
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     maxAge: 1e3 * 60 * 60 * 24
     // 24 hour or 1 day
   });
   res.cookie("refreshToken", refreshToken3, {
     httpOnly: true,
+<<<<<<< HEAD
     secure: config_default.node_env === "development" ? false : true,
     sameSite: config_default.node_env === "development" ? "lax" : "none",
+=======
+    secure: false,
+    sameSite: "none",
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     maxAge: 1e3 * 60 * 60 * 24 * 7
     // 7 days
   });
@@ -1074,6 +1110,7 @@ var verifyUserEmail = catchAsync(async (req, res) => {
     data: { accessToken, refreshToken: refreshToken3, createdUser }
   });
 });
+<<<<<<< HEAD
 var resendOtp = catchAsync(async (req, res) => {
   const payload = req.body;
   await authServices.resendOtpForRegistration(payload);
@@ -1086,19 +1123,32 @@ var resendOtp = catchAsync(async (req, res) => {
 });
 var loginUser2 = catchAsync(async (req, res) => {
   console.log(config_default.node_env, "this is node env here login");
+=======
+var loginUser2 = catchAsync(async (req, res) => {
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
   const payload = req.body;
   const { accessToken, refreshToken: refreshToken3 } = await authServices.loginUser(payload);
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
+<<<<<<< HEAD
     secure: config_default.node_env === "development" ? false : true,
     sameSite: config_default.node_env === "development" ? "lax" : "none",
+=======
+    secure: false,
+    sameSite: "none",
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     maxAge: 1e3 * 60 * 60 * 24
     // 24 hour or 1 day
   });
   res.cookie("refreshToken", refreshToken3, {
     httpOnly: true,
+<<<<<<< HEAD
     secure: config_default.node_env === "development" ? false : true,
     sameSite: config_default.node_env === "development" ? "lax" : "none",
+=======
+    secure: false,
+    sameSite: "none",
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     maxAge: 1e3 * 60 * 60 * 24 * 7
     // 7 days
   });
@@ -1120,15 +1170,25 @@ var refreshToken2 = catchAsync(async (req, res) => {
   const { accessToken, refreshToken: newRefreshToken } = result;
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
+<<<<<<< HEAD
     secure: config_default.node_env === "development" ? false : true,
     sameSite: config_default.node_env === "development" ? "lax" : "none",
+=======
+    secure: false,
+    sameSite: "none",
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     maxAge: 1e3 * 60 * 60 * 24
     // 24 hour or 1 day
   });
   res.cookie("refreshToken", newRefreshToken, {
     httpOnly: true,
+<<<<<<< HEAD
     secure: config_default.node_env === "development" ? false : true,
     sameSite: config_default.node_env === "development" ? "lax" : "none",
+=======
+    secure: false,
+    sameSite: "none",
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     maxAge: 1e3 * 60 * 60 * 24 * 7
     // 7 days
   });
@@ -1148,15 +1208,25 @@ var googleLoginUser = catchAsync(async (req, res) => {
   const { accessToken, refreshToken: refreshToken3 } = result;
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
+<<<<<<< HEAD
     secure: config_default.node_env === "development" ? false : true,
     sameSite: config_default.node_env === "development" ? "lax" : "none",
+=======
+    secure: false,
+    sameSite: "none",
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     maxAge: 1e3 * 60 * 60 * 24
     // 24 hour or 1 day
   });
   res.cookie("refreshToken", refreshToken3, {
     httpOnly: true,
+<<<<<<< HEAD
     secure: config_default.node_env === "development" ? false : true,
     sameSite: config_default.node_env === "development" ? "lax" : "none",
+=======
+    secure: false,
+    sameSite: "none",
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     maxAge: 1e3 * 60 * 60 * 24 * 7
     // 7 days
   });
@@ -1186,6 +1256,7 @@ var getMe2 = catchAsync(async (req, res) => {
     data: result
   });
 });
+<<<<<<< HEAD
 var getTechnicianCount2 = catchAsync(async (_req, res) => {
   const result = await authServices.getTechnicianCount();
   sendResponse(res, {
@@ -1195,6 +1266,8 @@ var getTechnicianCount2 = catchAsync(async (_req, res) => {
     data: result
   });
 });
+=======
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 var updateUserProfile = catchAsync(async (req, res) => {
   const profileImageFile = req.file;
   const payload = JSON.parse(req.body.data);
@@ -1211,6 +1284,7 @@ var updateUserProfile = catchAsync(async (req, res) => {
     data: result
   });
 });
+<<<<<<< HEAD
 var logout = catchAsync(async (req, res) => {
   res.clearCookie("accessToken");
   res.clearCookie("refreshToken");
@@ -1225,13 +1299,22 @@ var authController = {
   registerUser,
   verifyUserEmail,
   resendOtp,
+=======
+var authController = {
+  registerUser,
+  verifyUserEmail,
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
   loginUser: loginUser2,
   refreshToken: refreshToken2,
   googleLoginUser,
   getMe: getMe2,
+<<<<<<< HEAD
   getTechnicianCount: getTechnicianCount2,
   updateUserProfile,
   logout
+=======
+  updateUserProfile
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 };
 
 // src/app/middlewares/checkAuth.ts
@@ -1261,6 +1344,10 @@ var auth = (...requiredRoles) => {
       where: {
         id: userId,
         email,
+<<<<<<< HEAD
+=======
+        name,
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
         role
       }
     });
@@ -1310,6 +1397,7 @@ var registerUserValidationZodSchema = import_zod.default.object({
 });
 var loginSchema = import_zod.default.object({
   email: import_zod.default.email("Invalid email address,Try again"),
+<<<<<<< HEAD
   password: import_zod.default.string("Password is not a string")
 });
 var resendOtpSchema = import_zod.default.object({
@@ -1319,6 +1407,13 @@ var userValidation = {
   registerUserValidationZodSchema,
   loginSchema,
   resendOtpSchema
+=======
+  password: import_zod.default.string("Password should be a string")
+});
+var userValidation = {
+  registerUserValidationZodSchema,
+  loginSchema
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 };
 
 // src/app/lib/multer.ts
@@ -1333,6 +1428,7 @@ var upload = (0, import_multer.default)({ storage, limits: {
 var router = (0, import_express.Router)();
 router.post("/register", validateRequest(userValidation.registerUserValidationZodSchema), authController.registerUser);
 router.post("/verify-email", authController.verifyUserEmail);
+<<<<<<< HEAD
 router.post("/resend-otp", validateRequest(userValidation.resendOtpSchema), authController.resendOtp);
 router.post("/resen-otp", validateRequest(userValidation.resendOtpSchema), authController.resendOtp);
 router.post("/login", validateRequest(userValidation.loginSchema), authController.loginUser);
@@ -1342,6 +1438,13 @@ router.post("/logout", authController.logout);
 router.patch("/update-profile", auth(Role.ADMIN, Role.CUSTOMER, Role.TECHNICIAN), upload.single("profileImage"), authController.updateUserProfile);
 router.get("/get-me", auth(Role.ADMIN, Role.TECHNICIAN, Role.CUSTOMER), authController.getMe);
 router.get("/technician-count", authController.getTechnicianCount);
+=======
+router.post("/login", validateRequest(userValidation.loginSchema), authController.loginUser);
+router.post("/refresh-token", authController.refreshToken);
+router.post("/google-login", authController.googleLoginUser);
+router.patch("/update-profile", auth(Role.ADMIN, Role.CUSTOMER, Role.TECHNICIAN), upload.single("profileImage"), authController.updateUserProfile);
+router.get("/get-me", auth(Role.ADMIN, Role.TECHNICIAN, Role.CUSTOMER), authController.getMe);
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 var AuthRoutes = router;
 
 // src/app/modules/technicianProfile/technician-profile.route.ts
@@ -1413,7 +1516,11 @@ var technicianProfileApprovalInDb = async (payload) => {
     }
   });
   if (!techProfile) {
+<<<<<<< HEAD
     throw new AppError(import_http_status7.default.NOT_FOUND, "Technican  profile is not exist");
+=======
+    throw new AppError(import_http_status7.default.NOT_FOUND, "Technican profile is not exist");
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
   }
   if (payload.status === TechnicianProfileStatus.REJECTED && techProfile.technicianvProfileVerificationStatus === TechnicianProfileStatus.APPROVED) {
     throw new AppError(import_http_status7.default.BAD_REQUEST, `Technican profile is approved cant reject it again`);
@@ -1506,7 +1613,11 @@ var createZoneInDb = async (payload, zoneImageFile) => {
       "Zone code already exists"
     );
   }
+<<<<<<< HEAD
   const { name, code, description } = payload;
+=======
+  const { name, code, description, status } = payload;
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
   const zoneImageUploadResult = await new Promise(
     (resolve, reject) => {
       cloudinary.uploader.upload_stream(
@@ -1535,6 +1646,10 @@ var createZoneInDb = async (payload, zoneImageFile) => {
       name,
       code,
       description,
+<<<<<<< HEAD
+=======
+      status,
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
       zoneImageUrl: zoneImageUploadResult.secure_url,
       zoneImagePublicId: zoneImageUploadResult.public_id
     },
@@ -1671,7 +1786,12 @@ var import_zod3 = __toESM(require("zod"), 1);
 var createZoneZodSchema = import_zod3.default.object({
   name: import_zod3.default.string("Name is not a string").min(5, "Name should minimum have 5 char").max(100, "Name should not be more than 100 chars"),
   code: import_zod3.default.string("Not a string").min(5, "Code should minimum have 5 char").max(10, "Max 10 chars"),
+<<<<<<< HEAD
   description: import_zod3.default.string("Not a string").min(5, "Description should minimum have 5 char").max(150, "Max 150 chars")
+=======
+  description: import_zod3.default.string("Not a string").min(5, "Description should minimum have 5 char").max(150, "Max 150 chars"),
+  status: import_zod3.default.enum(["ACTIVE", "INACTIVE"])
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 });
 var updateZoneZodSchema = createZoneZodSchema.partial().refine(
   (payload) => Object.keys(payload).length > 0,
@@ -1929,7 +2049,11 @@ var getSubstationDetails2 = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: import_http_status12.default.OK,
     success: true,
+<<<<<<< HEAD
     message: "Substation details retrieved successfully",
+=======
+    message: " Zone Details Successfully",
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     data: result
   });
 });
@@ -2037,7 +2161,12 @@ var getAllFeederFromDb = async (query) => {
     },
     include: {
       areas: true,
+<<<<<<< HEAD
       substation: true
+=======
+      substation: true,
+      zone: true
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     }
   });
   const totalFeederCount = await prisma.feeder.count({
@@ -2062,7 +2191,12 @@ var getFeederDetails = async (feederId) => {
     },
     include: {
       areas: true,
+<<<<<<< HEAD
       substation: true
+=======
+      substation: true,
+      zone: true
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     }
   });
   return substationDetails;
@@ -2233,7 +2367,13 @@ var getAllAreaFromDb = async (query) => {
       [sortBy]: sortOrder
     },
     include: {
+<<<<<<< HEAD
       feeder: true
+=======
+      feeder: true,
+      substation: true,
+      zone: true
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     }
   });
   const totalAreaCount = await prisma.area.count({
@@ -2257,7 +2397,13 @@ var getAreaDetails = async (areaId) => {
       id: areaId
     },
     include: {
+<<<<<<< HEAD
       feeder: true
+=======
+      feeder: true,
+      substation: true,
+      zone: true
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     }
   });
   return areaDetails;
@@ -2415,12 +2561,16 @@ var getAllOutageFromDb = async (query) => {
     },
     include: {
       techician: true,
+<<<<<<< HEAD
       area: true,
       user: {
         omit: {
           password: true
         }
       }
+=======
+      user: true
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     }
   });
   const totalOutagesCount = await prisma.outage.count({
@@ -2438,6 +2588,7 @@ var getAllOutageFromDb = async (query) => {
     }
   };
 };
+<<<<<<< HEAD
 var getOutageCountsFromDb = async () => {
   const [totalReportedOutages, totalRestoredOutages] = await Promise.all([
     prisma.outage.count({
@@ -2449,6 +2600,8 @@ var getOutageCountsFromDb = async () => {
   ]);
   return { totalReportedOutages, totalRestoredOutages };
 };
+=======
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 var getCurrentUserAddedAllOutagesFromDb = async (userId) => {
   const currentUserOutages = await prisma.outage.findMany({
     where: {
@@ -2457,16 +2610,21 @@ var getCurrentUserAddedAllOutagesFromDb = async (userId) => {
     },
     include: {
       techician: true,
+<<<<<<< HEAD
       area: true,
       user: {
         omit: {
           password: true
         }
       }
+=======
+      user: true
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     }
   });
   return currentUserOutages;
 };
+<<<<<<< HEAD
 var getCurrentTechnicianAssignedOutagesFromDb = async (userId) => {
   return prisma.outage.findMany({
     where: {
@@ -2487,6 +2645,8 @@ var getCurrentTechnicianAssignedOutagesFromDb = async (userId) => {
     }
   });
 };
+=======
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 var getOutageDetailsFromDb = async (outageId, userId) => {
   const outage = await prisma.outage.findUnique({
     where: { id: outageId },
@@ -2698,7 +2858,12 @@ var updateOutageStatusInDb = async (outageId, status, userId, userRole) => {
           id: outageId
         },
         data: {
+<<<<<<< HEAD
           status: OutageStatus.RESTORED
+=======
+          status: OutageStatus.RESTORED,
+          restoredAt: /* @__PURE__ */ new Date()
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
         }
       });
       await tx.technicianProfile.update({
@@ -2749,9 +2914,13 @@ var deleteOutageFromDb = async (outageId, requestedUserId) => {
 var OutageService = {
   createOutageInDb,
   getAllOutageFromDb,
+<<<<<<< HEAD
   getOutageCountsFromDb,
   getCurrentUserAddedAllOutagesFromDb,
   getCurrentTechnicianAssignedOutagesFromDb,
+=======
+  getCurrentUserAddedAllOutagesFromDb,
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
   getOutageDetailsFromDb,
   updateOutageInDb,
   assignTechnician,
@@ -2781,6 +2950,7 @@ var getAllOutageForAdminManage = catchAsync(async (req, res) => {
     meta
   });
 });
+<<<<<<< HEAD
 var getOutageCounts = catchAsync(async (_req, res) => {
   const result = await OutageService.getOutageCountsFromDb();
   sendResponse(res, {
@@ -2790,6 +2960,8 @@ var getOutageCounts = catchAsync(async (_req, res) => {
     data: result
   });
 });
+=======
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 var getCurrentUserAddedOutages = catchAsync(async (req, res) => {
   const userId = req.user?.userId;
   const result = await OutageService.getCurrentUserAddedAllOutagesFromDb(userId);
@@ -2800,6 +2972,7 @@ var getCurrentUserAddedOutages = catchAsync(async (req, res) => {
     data: result
   });
 });
+<<<<<<< HEAD
 var getCurrentTechnicianAssignedOutages = catchAsync(async (req, res) => {
   const userId = req.user?.userId;
   const result = await OutageService.getCurrentTechnicianAssignedOutagesFromDb(userId);
@@ -2810,6 +2983,8 @@ var getCurrentTechnicianAssignedOutages = catchAsync(async (req, res) => {
     data: result
   });
 });
+=======
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 var getOutageDetails = catchAsync(async (req, res) => {
   const result = await OutageService.getOutageDetailsFromDb(
     req.params.outageId,
@@ -2839,7 +3014,10 @@ var assignTechnicianToReportedOutage = catchAsync(
   async (req, res) => {
     const { outageId } = req.params;
     const { technicianId } = req.body;
+<<<<<<< HEAD
     console.log(outageId, technicianId, "tech assign outage controlelr");
+=======
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     const result = await OutageService.assignTechnician(
       outageId,
       technicianId
@@ -2880,7 +3058,11 @@ var deleteOutage = catchAsync(
     sendResponse(res, {
       statusCode: import_http_status18.default.OK,
       success: true,
+<<<<<<< HEAD
       message: "Outage deleted successfully",
+=======
+      message: "Outage status updated successfully",
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
       data: result
     });
   }
@@ -2888,9 +3070,13 @@ var deleteOutage = catchAsync(
 var OutageController = {
   createOutage,
   getAllOutageForAdminManage,
+<<<<<<< HEAD
   getOutageCounts,
   getCurrentUserAddedOutages,
   getCurrentTechnicianAssignedOutages,
+=======
+  getCurrentUserAddedOutages,
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
   getOutageDetails,
   updateOutage,
   assignTechnicianToReportedOutage,
@@ -2921,9 +3107,13 @@ var outageValidation = {
 var router7 = (0, import_express7.Router)();
 router7.post("/", auth(Role.CUSTOMER), validateRequest(outageValidation.createOutageZodSchema), OutageController.createOutage);
 router7.get("/", auth(Role.ADMIN), OutageController.getAllOutageForAdminManage);
+<<<<<<< HEAD
 router7.get("/counts", OutageController.getOutageCounts);
 router7.get("/my-outage", auth(Role.CUSTOMER), OutageController.getCurrentUserAddedOutages);
 router7.get("/my-assigned-outages", auth(Role.TECHNICIAN), OutageController.getCurrentTechnicianAssignedOutages);
+=======
+router7.get("/my-outage", auth(Role.CUSTOMER), OutageController.getCurrentUserAddedOutages);
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 router7.get("/:outageId", auth(Role.ADMIN, Role.CUSTOMER), OutageController.getOutageDetails);
 router7.patch("/:outageId", auth(Role.CUSTOMER), validateRequest(outageValidation.updateOutageZodSchema), OutageController.updateOutage);
 router7.patch("/:outageId/assign-technician", auth(Role.ADMIN), OutageController.assignTechnicianToReportedOutage);
@@ -3239,7 +3429,11 @@ var updateLoadSheddingSchedule = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: import_http_status20.default.OK,
     success: true,
+<<<<<<< HEAD
     message: "Loadshedding schedule updated successfully",
+=======
+    message: " Loadshedding Details Successfully",
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     data: result
   });
 });
@@ -3842,8 +4036,13 @@ var PlannedOutageController = {
 var router10 = (0, import_express10.Router)();
 router10.post("/", auth(Role.ADMIN), validateRequest(plannedOutageValidation.createPlannedOutageZodSchema), PlannedOutageController.createPlannedOutage);
 router10.get("/", PlannedOutageController.getAllPlannedOutageSchdeule);
+<<<<<<< HEAD
 router10.get("/:plannedOutageId", auth(Role.CUSTOMER, Role.ADMIN), PlannedOutageController.getPlannedOutageDetails);
 router10.patch("/:plannedOutageId", auth(Role.ADMIN), validateRequest(plannedOutageValidation.updatePlannedOutageZodSchema), PlannedOutageController.updatePlannedOutageSchedule);
+=======
+router10.get("/:plannedOutageId", auth(Role.CUSTOMER, Role.ADMIN), PlannedOutageController.getAllPlannedOutageSchdeule);
+router10.patch("/:plannedOutageId", auth(Role.ADMIN), validateRequest(plannedOutageValidation.updatePlannedOutageZodSchema), PlannedOutageController.getAllPlannedOutageSchdeule);
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 var PlannedOutageRoutes = router10;
 
 // src/app/modules/admin/admin.route.ts
@@ -4280,7 +4479,11 @@ var AnalyticsRoutes = router12;
 var app = (0, import_express13.default)();
 app.use(
   (0, import_cors.default)({
+<<<<<<< HEAD
     origin: config_default.cors_url,
+=======
+    origin: config_default.app_url,
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     credentials: true
   })
 );

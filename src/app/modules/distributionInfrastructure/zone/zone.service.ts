@@ -6,7 +6,11 @@ import type { UploadApiResponse } from "cloudinary";
 import { cloudinary } from "../../../lib/cloudinary";
 import type { IQuery } from "../../../interfaces/interface";
 import type { ZoneWhereInput } from "../../../../generated/prisma/models";
+<<<<<<< HEAD
 import type { InfrastructureStatus } from "../../../../generated/prisma/enums";
+=======
+import { InfrastructureStatus } from "../../../../generated/prisma/enums";
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 
 const createZoneInDb = async (
     payload: ICreateZonePayload,
@@ -25,7 +29,11 @@ const createZoneInDb = async (
         );
     }
 
+<<<<<<< HEAD
     const { name, code, description } = payload;
+=======
+    const { name, code, description, status } = payload;
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 
     const zoneImageUploadResult = await new Promise<UploadApiResponse>(
         (resolve, reject) => {
@@ -60,6 +68,10 @@ const createZoneInDb = async (
             name,
             code,
             description,
+<<<<<<< HEAD
+=======
+            status,
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
             zoneImageUrl: zoneImageUploadResult.secure_url,
             zoneImagePublicId: zoneImageUploadResult.public_id
         },

@@ -17,7 +17,11 @@ const createSubstation = catchAsync(async (req: Request, res: Response) => {
 });
 
 
+<<<<<<< HEAD
 //get all  with pagination search filter
+=======
+//get all zone with pagination search filter
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 const getAllSubstation = catchAsync(async (req: Request, res: Response) => {
 
 
@@ -31,7 +35,11 @@ const getAllSubstation = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+<<<<<<< HEAD
 // details 
+=======
+//zone details 
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 
 const getSubstationDetails = catchAsync(async (req: Request, res: Response) => {
 

@@ -21,7 +21,11 @@ const app: Application = express();
 //cors setup
 app.use(
   cors({
+<<<<<<< HEAD
     origin: config.cors_url,
+=======
+    origin: config.app_url,
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     credentials: true,
   }),
 );
@@ -77,7 +81,11 @@ app.use("/api/v1/analytics",AnalyticsRoutes)
 
 //default get
 app.get("/", (req: Request, res: Response) => {
+<<<<<<< HEAD
   res.send("Next level assignment 6 and Load Shedding & Power Management server is running");
+=======
+  res.send("Power Pulse - Load Shedding & Power Management server is running");
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 });
 
 

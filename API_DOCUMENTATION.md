@@ -55,7 +55,10 @@
 26. `POST /api/v1/outage` - Report an unexpected power outage. **Customer only**
 27. `GET /api/v1/outage` - Get all reported outages for administrative management. **Admin only**
 28. `GET /api/v1/outage` - Get outages reported by the authenticated customer. **Customer only**
+<<<<<<< HEAD
 	`GET /api/v1/outage/my-assigned-outages` - Get all non-deleted outages assigned to the authenticated technician, regardless of status. **Technician only**
+=======
+>>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 29. `GET /api/v1/outage/:outageId` - Get outage details. **Admin, Customer, or Technician**
 30. `PATCH /api/v1/outage/:outageId` - Update reported outage details. Status cannot be changed here. **Customer only**
 31. `PATCH /api/v1/outage/:outageId/assign-technician` - Assign a technician to a reported outage. **Admin only**
