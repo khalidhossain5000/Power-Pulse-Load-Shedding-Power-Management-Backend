@@ -1,0 +1,44 @@
+import type { Role, UserStatus } from "../../../generated/prisma/enums";
+
+export interface IRegisterUser {
+    name:string;
+    email:string;
+    password:string;
+    role:Role;
+    status:UserStatus;
+    profileImage?:string;
+}
+
+
+
+export interface IVerifyEmailPayload{
+    email:string;
+    otp:string
+}
+
+export interface IResendOtpPayload{
+    email:string;
+}
+
+
+export interface ILoginUserPayload{
+    email:string;
+    password:string;
+}
+
+
+export interface IGoogleLoginPayload {
+	idToken: string;
+    role?:Role
+}
+
+export interface IRequestUser {
+	userId: string;
+	email: string;
+	name: string;
+	role: Role;
+}
+
+export interface IUpadteUserProfile{
+	name:string;
+}
