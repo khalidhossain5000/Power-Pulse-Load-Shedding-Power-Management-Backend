@@ -13,22 +13,16 @@ router.post("/", auth(Role.CUSTOMER), validateRequest(outageValidation.createOut
 //--get all unexpected outage for admin manage
 router.get("/", auth(Role.ADMIN), OutageController.getAllOutageForAdminManage)
 
-<<<<<<< HEAD
 //--public outage counts
 router.get("/counts", OutageController.getOutageCounts)
-=======
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 
 //--get my (currentuser addeda ll ) outage
 
 router.get("/my-outage", auth(Role.CUSTOMER), OutageController.getCurrentUserAddedOutages)
-<<<<<<< HEAD
 
 //--get all outages assigned to the current technician
 router.get("/my-assigned-outages", auth(Role.TECHNICIAN), OutageController.getCurrentTechnicianAssignedOutages)
 
-=======
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 //--get outage details
 router.get("/:outageId", auth(Role.ADMIN, Role.CUSTOMER), OutageController.getOutageDetails)
 

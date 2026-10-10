@@ -58,10 +58,7 @@ export const auth = (...requiredRoles: Role[]) => {
 			where: {
 				id: userId,
 				email,
-<<<<<<< HEAD
-=======
 				name,
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 				role,
 			},
 		});

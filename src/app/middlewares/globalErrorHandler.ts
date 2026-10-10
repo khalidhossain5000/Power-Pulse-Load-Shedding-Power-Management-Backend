@@ -58,7 +58,6 @@ export const globalErrorHandler = async (
 		success: false,
 		statusCode: statusCode || httpStatus.INTERNAL_SERVER_ERROR,
 		name:
-<<<<<<< HEAD
 			config.node_env === "production" ? errorName : "Internal Server Error",
 		message:
 			config.node_env === "production"
@@ -66,14 +65,5 @@ export const globalErrorHandler = async (
 				: "Internal Server Error",
 		error: config.node_env === "production" ? err : undefined,
 		stack: config.node_env === "production" ? err.stack : undefined,
-=======
-			config.node_env === "development" ? errorName : "Internal Server Error",
-		message:
-			config.node_env === "development"
-				? errorMessage
-				: "Internal Server Error",
-		error: config.node_env === "development" ? err : undefined,
-		stack: config.node_env === "development" ? err.stack : undefined,
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 	});
 };

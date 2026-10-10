@@ -10,7 +10,6 @@ const registerUserValidationZodSchema = z.object({
 
 const loginSchema = z.object({
     email: z.email("Invalid email address,Try again"),
-<<<<<<< HEAD
     password: z.string("Password is not a string")
 })
 
@@ -22,12 +21,5 @@ export const userValidation = {
     registerUserValidationZodSchema,
     loginSchema,
     resendOtpSchema
-=======
-    password: z.string("Password should be a string")
-})
-export const userValidation = {
-    registerUserValidationZodSchema,
-    loginSchema
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 
 }

@@ -68,13 +68,8 @@ const getAllAreaFromDb = async (query: IQuery) => {
         },
         include: {
             feeder: true,
-<<<<<<< HEAD
-    
-            
-=======
             substation: true,
             zone: true
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
         }
     })
 
@@ -110,13 +105,8 @@ const getAreaDetails = async (areaId: string) => {
         include:
         {
             feeder: true,
-<<<<<<< HEAD
-
-            
-=======
             substation: true,
             zone: true
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
         }
     })
     return areaDetails

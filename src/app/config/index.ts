@@ -11,12 +11,9 @@ export default {
 
 	database_url: process.env.DATABASE_URL,
 
-<<<<<<< HEAD
 	cors_url:process.env.CORS_URL,
 
 
-=======
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 	app_url: process.env.APP_URL,
 	frontend_url: process.env.FRONTEND_URL,
 

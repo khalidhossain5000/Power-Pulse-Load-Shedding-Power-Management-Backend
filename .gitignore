@@ -5,11 +5,8 @@ node_modules
 /generated/prisma
 
 .vercel
-<<<<<<< HEAD
-=======
 
 
 dist
 
 .git
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8

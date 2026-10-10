@@ -7,7 +7,6 @@ import { sendResponse } from "../../utils/sendResponse";
 import type { Role } from "../../../generated/prisma/enums";
 
 const createOutage = catchAsync(async (req: Request, res: Response) => {
-<<<<<<< HEAD
   const payload = req.body
   const userId = req.user?.userId
 
@@ -19,19 +18,6 @@ const createOutage = catchAsync(async (req: Request, res: Response) => {
     message: "Unexpected Outage created successfully",
     data: result,
   });
-=======
-    const payload = req.body
-    const userId=req.user?.userId
-
-    const result = await OutageService.createOutageInDb(payload,userId as string)
-
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: "Unexpected Outage created successfully",
-        data: result,
-    });
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 });
 
 
@@ -39,7 +25,6 @@ const createOutage = catchAsync(async (req: Request, res: Response) => {
 const getAllOutageForAdminManage = catchAsync(async (req: Request, res: Response) => {
 
 
-<<<<<<< HEAD
   const { data, meta } = await OutageService.getAllOutageFromDb(req.query)
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -59,16 +44,6 @@ const getOutageCounts = catchAsync(async (_req: Request, res: Response) => {
     message: "Outage counts retrieved successfully",
     data: result,
   });
-=======
-    const { data, meta } = await OutageService.getAllOutageFromDb(req.query)
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: "All Outages Retrieved Successfully",
-        data: data,
-        meta: meta,
-    });
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 });
 
 
@@ -76,7 +51,6 @@ const getOutageCounts = catchAsync(async (_req: Request, res: Response) => {
 
 const getCurrentUserAddedOutages = catchAsync(async (req: Request, res: Response) => {
 
-<<<<<<< HEAD
   const userId = req.user?.userId
 
   const result = await OutageService.getCurrentUserAddedAllOutagesFromDb(userId as string)
@@ -101,20 +75,6 @@ const getCurrentTechnicianAssignedOutages = catchAsync(async (req: Request, res:
     message: "Assigned outages retrieved successfully",
     data: result,
   });
-=======
-    const userId=req.user?.userId
-
-    const result=await OutageService.getCurrentUserAddedAllOutagesFromDb(userId as string)
-
-
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: "All Outages Retrieved Successfully",
-        data: result,
-       
-    });
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 });
 
 const getOutageDetails = catchAsync(async (req: Request, res: Response) => {
@@ -150,11 +110,7 @@ const assignTechnicianToReportedOutage = catchAsync(
   async (req: Request, res: Response) => {
     const { outageId } = req.params;
     const { technicianId } = req.body;
-<<<<<<< HEAD
 console.log(outageId,technicianId,"tech assign outage controlelr")
-=======
-
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     const result = await OutageService.assignTechnician(
       outageId as string,
       technicianId
@@ -177,7 +133,6 @@ const updateOutageStatus = catchAsync(
   async (req: Request, res: Response) => {
     const { outageId } = req.params;
     const { status } = req.body;
-<<<<<<< HEAD
     const userId = req.user?.userId;
 
     const userRole = req.user?.role
@@ -186,15 +141,6 @@ const updateOutageStatus = catchAsync(
       status,
       userId as string,
       userRole as Role
-=======
-    const userId=req.user?.userId;
-    const userRole=req.user?.role
-    const result = await OutageService.updateOutageStatusInDb(
-      outageId as string,
-      status,
-     userId as string,
-     userRole as Role
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     );
 
     sendResponse(res, {
@@ -211,17 +157,10 @@ const updateOutageStatus = catchAsync(
 
 const deleteOutage = catchAsync(
   async (req: Request, res: Response) => {
-<<<<<<< HEAD
 
     const outageId = req.params.outageId
     const requestedUserId = req.user?.userId
     const result = await OutageService.deleteOutageFromDb(outageId as string, requestedUserId as string)
-=======
-   
-    const outageId=req.params.outageId
-    const requestedUserId=req.user?.userId
-    const result=await OutageService.deleteOutageFromDb(outageId as string, requestedUserId as string)
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -232,7 +171,6 @@ const deleteOutage = catchAsync(
 );
 
 export const OutageController = {
-<<<<<<< HEAD
   createOutage,
   getAllOutageForAdminManage,
   getOutageCounts,
@@ -244,15 +182,4 @@ export const OutageController = {
   updateOutageStatus,
   deleteOutage
 
-=======
-    createOutage,
-    getAllOutageForAdminManage,
-    getCurrentUserAddedOutages,
-    getOutageDetails,
-    updateOutage,
-    assignTechnicianToReportedOutage,
-    updateOutageStatus,
-    deleteOutage
-    
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 }

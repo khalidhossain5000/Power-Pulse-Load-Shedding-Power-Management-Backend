@@ -3,11 +3,7 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: <explanation> */
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
-<<<<<<< HEAD
 import type { IGoogleLoginPayload, ILoginUserPayload, IRegisterUser, IRequestUser, IResendOtpPayload, IUpadteUserProfile, IVerifyEmailPayload } from "./auth.interface"
-=======
-import type { IGoogleLoginPayload, ILoginUserPayload, IRegisterUser, IRequestUser, IUpadteUserProfile, IVerifyEmailPayload } from "./auth.interface"
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 import httpStatus from "http-status";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
@@ -101,7 +97,6 @@ const registerUserInDb = async (payload: IRegisterUser) => {
 
 //verify otp and create user in the db
 
-<<<<<<< HEAD
 const resendOtpForRegistration = async (payload: IResendOtpPayload) => {
 	const email = payload.email.trim().toLowerCase();
 
@@ -155,8 +150,6 @@ const resendOtpForRegistration = async (payload: IResendOtpPayload) => {
 	});
 };
 
-=======
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 const verifyOtpAndCreateUser = async (payload: IVerifyEmailPayload) => {
 	const { otp } = payload;
 
@@ -508,19 +501,11 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
 
 	// 6. Completely new Google user
 	if (!user) {
-<<<<<<< HEAD
 		// New user registration can login here  neeed to go to register page select role and then login
 		if (!payload.role) {
 			throw new AppError(
 				httpStatus.BAD_REQUEST,
 				"You are not registered yet. Please register first."
-=======
-		// New user registration needs role
-		if (!payload.role) {
-			throw new AppError(
-				httpStatus.BAD_REQUEST,
-				"Role is required for new Google registration"
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 			);
 		}
 
@@ -624,7 +609,6 @@ const getMe = async (user: IRequestUser) => {
 	return isUserExists;
 };
 
-<<<<<<< HEAD
 const getTechnicianCount = async () => {
 	return prisma.user.count({
 		where: {
@@ -633,8 +617,6 @@ const getTechnicianCount = async () => {
 	});
 };
 
-=======
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 
 //update user profile service
 
@@ -707,21 +689,13 @@ const updateUserProfileInDb = async (payload: IUpadteUserProfile, profileImage: 
 
 export const authServices = {
 	registerUserInDb,
-<<<<<<< HEAD
 	resendOtpForRegistration,
-=======
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 	verifyOtpAndCreateUser,
 	loginUser,
 	refreshToken,
 	googleLogin,
 	getMe,
-<<<<<<< HEAD
 	getTechnicianCount,
 	updateUserProfileInDb
 }
 
-=======
-	updateUserProfileInDb
-}
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8

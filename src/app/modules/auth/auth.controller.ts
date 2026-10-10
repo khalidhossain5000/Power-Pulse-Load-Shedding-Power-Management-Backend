@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 /** biome-ignore-all lint/complexity/noUselessTernary: <explanation> */
-=======
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 import type { Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
 import httpStatus from "http-status";
@@ -9,10 +6,7 @@ import { authServices } from "./auth.service";
 import { sendResponse } from "../../utils/sendResponse";
 import { AppError } from "../../utils/AppError";
 import type { IRequestUser } from "./auth.interface";
-<<<<<<< HEAD
 import config from "../../config";
-=======
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
   //zod sanitization
@@ -42,25 +36,15 @@ const verifyUserEmail = catchAsync(async (req: Request, res: Response) => {
   //cookie set
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
-<<<<<<< HEAD
     secure: config.node_env==="development" ? false : true ,
     sameSite:config.node_env==="development" ? "lax" : "none",
-=======
-    secure: false,
-    sameSite: "none",
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-<<<<<<< HEAD
     secure: config.node_env==="development" ? false : true ,
     sameSite:config.node_env==="development" ? "lax" : "none",
 
-=======
-    secure: false,
-    sameSite: "none",
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
   });
   sendResponse(res, {
@@ -73,7 +57,6 @@ const verifyUserEmail = catchAsync(async (req: Request, res: Response) => {
 
 //login user
 
-<<<<<<< HEAD
 const resendOtp = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
 
@@ -90,10 +73,6 @@ const resendOtp = catchAsync(async (req: Request, res: Response) => {
 const loginUser = catchAsync(async (req: Request, res: Response) => {
 
 console.log(config.node_env,'this is node env here login')
-=======
-const loginUser = catchAsync(async (req: Request, res: Response) => {
-
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 
   const payload = req.body;
 
@@ -101,7 +80,6 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
-<<<<<<< HEAD
     secure: config.node_env==="development" ? false : true ,
     sameSite:config.node_env==="development" ? "lax" : "none",
     maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
@@ -112,16 +90,6 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
     secure: config.node_env==="development" ? false : true ,
     sameSite:config.node_env==="development" ? "lax" : "none",
 
-=======
-    secure: false,
-    sameSite: "none",
-    maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
-  });
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "none",
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
   });
 
@@ -147,7 +115,6 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
 
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
-<<<<<<< HEAD
     secure: config.node_env==="development" ? false : true ,
     sameSite:config.node_env==="development" ? "lax" : "none",
 
@@ -159,16 +126,6 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
     secure: config.node_env==="development" ? false : true ,
     sameSite:config.node_env==="development" ? "lax" : "none",
 
-=======
-    secure: false,
-    sameSite: "none",
-    maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
-  });
-  res.cookie("refreshToken", newRefreshToken, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "none",
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
   });
 
@@ -192,25 +149,15 @@ const googleLoginUser = catchAsync(async (req: Request, res: Response) => {
   const { accessToken, refreshToken } = result;
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
-<<<<<<< HEAD
     secure: config.node_env==="development" ? false : true ,
     sameSite:config.node_env==="development" ? "lax" : "none",
-=======
-    secure: false,
-    sameSite: "none",
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-<<<<<<< HEAD
     secure: config.node_env==="development" ? false : true ,
        sameSite:config.node_env==="development" ? "lax" : "none",
 
-=======
-    secure: false,
-    sameSite: "none",
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
   });
 
@@ -246,7 +193,6 @@ const getMe = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-<<<<<<< HEAD
 const getTechnicianCount = catchAsync(async (_req: Request, res: Response) => {
   const result = await authServices.getTechnicianCount();
   sendResponse(res, {
@@ -257,8 +203,6 @@ const getTechnicianCount = catchAsync(async (_req: Request, res: Response) => {
   });
 });
 
-=======
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 //update user profile controller
 
 const updateUserProfile = catchAsync(async (req: Request, res: Response) => {
@@ -281,7 +225,6 @@ const updateUserProfile = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-<<<<<<< HEAD
 const logout=catchAsync(async(req:Request,res:Response)=>{
 	res.clearCookie("accessToken")
 	res.clearCookie("refreshToken")
@@ -297,20 +240,11 @@ export const authController = {
   registerUser,
   verifyUserEmail,
   resendOtp,
-=======
-export const authController = {
-  registerUser,
-  verifyUserEmail,
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
   loginUser,
   refreshToken,
   googleLoginUser,
   getMe,
-<<<<<<< HEAD
   getTechnicianCount,
   updateUserProfile,
   logout
-=======
-  updateUserProfile,
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 };

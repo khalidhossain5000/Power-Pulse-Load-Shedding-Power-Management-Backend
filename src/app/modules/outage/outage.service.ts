@@ -17,11 +17,7 @@ export const createOutageInDb = async (
   payload: IOutagePayload,
   userId: string
 ) => {
-<<<<<<< HEAD
   const { cause, description, areaId } = payload;
-=======
-  const { cause, description,areaId } = payload;
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 
   const outageCreatedResult = await prisma.outage.create({
     data: {
@@ -44,15 +40,9 @@ const getAllOutageFromDb = async (query: IQuery) => {
   const sortOrder = query.sortOrder ? query.sortOrder : "desc";
 
   const andConditions: OutageWhereInput[] = [];
-<<<<<<< HEAD
   andConditions.push({
     isDeleted: false,
   });
-=======
-andConditions.push({
-  isDeleted: false,
-});
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
   //Searching
   if (query.searchTerm) {
     andConditions.push({
@@ -85,16 +75,12 @@ andConditions.push({
     },
     include: {
       techician: true,
-<<<<<<< HEAD
       area: true,
       user: {
         omit: {
           password: true
         }
       },
-=======
-      user: true,
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     },
   });
 
@@ -115,7 +101,6 @@ andConditions.push({
   };
 };
 
-<<<<<<< HEAD
 const getOutageCountsFromDb = async () => {
   const [totalReportedOutages, totalRestoredOutages] = await Promise.all([
     prisma.outage.count({
@@ -129,8 +114,6 @@ const getOutageCountsFromDb = async () => {
   return { totalReportedOutages, totalRestoredOutages };
 };
 
-=======
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 //get current user added all outages
 
 const getCurrentUserAddedAllOutagesFromDb = async (userId: string) => {
@@ -141,23 +124,18 @@ const getCurrentUserAddedAllOutagesFromDb = async (userId: string) => {
     },
     include: {
       techician: true,
-<<<<<<< HEAD
       area: true,
       user: {
         omit: {
           password: true
         }
       },
-=======
-      user: true,
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     },
   });
 
   return currentUserOutages;
 };
 
-<<<<<<< HEAD
 const getCurrentTechnicianAssignedOutagesFromDb = async (userId: string) => {
   return prisma.outage.findMany({
     where: {
@@ -179,8 +157,6 @@ const getCurrentTechnicianAssignedOutagesFromDb = async (userId: string) => {
   });
 };
 
-=======
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 const getOutageDetailsFromDb = async (
   outageId: string,
   userId: string,
@@ -199,11 +175,7 @@ const getOutageDetailsFromDb = async (
     throw new AppError(httpStatus.NOT_FOUND, "Outage not found");
   }
 
-<<<<<<< HEAD
-
-=======
  
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
   return outage;
 };
 
@@ -234,11 +206,6 @@ const updateOutageInDb = async (
 //assign technician service
 
 const assignTechnician = async (outageId: string, technicianId: string) => {
-<<<<<<< HEAD
- 
-
-=======
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
   //s-1 check if reported outage exist or not
   const ifOutageExist = await prisma.outage.findUnique({
     where: {
@@ -248,11 +215,7 @@ const assignTechnician = async (outageId: string, technicianId: string) => {
   if (!ifOutageExist) {
     throw new AppError(httpStatus.NOT_FOUND, "Outage not found");
   }
-<<<<<<< HEAD
   //is outage deleted
-=======
-//is outage deleted
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 
   if (ifOutageExist.isDeleted) {
     throw new AppError(httpStatus.NOT_FOUND, "Outage is deleted");
@@ -386,22 +349,14 @@ const updateOutageStatusInDb = async (
       id: true,
       status: true,
       technicianId: true,
-<<<<<<< HEAD
       isDeleted: true
-=======
-      isDeleted:true
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
     },
   });
 
   if (!outage) {
     throw new AppError(httpStatus.NOT_FOUND, "Outage not found");
   }
-<<<<<<< HEAD
   //is outage deleted
-=======
-//is outage deleted
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 
   if (outage.isDeleted) {
     throw new AppError(httpStatus.NOT_FOUND, "Outage is deleted");
@@ -509,12 +464,7 @@ const updateOutageStatusInDb = async (
           id: outageId,
         },
         data: {
-<<<<<<< HEAD
           status: OutageStatus.RESTORED
-=======
-          status: OutageStatus.RESTORED,
-          restoredAt: new Date(),
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
         },
       });
 
@@ -546,15 +496,9 @@ const updateOutageStatusInDb = async (
 //delete outage
 
 
-<<<<<<< HEAD
 const deleteOutageFromDb = async (outageId: string, requestedUserId: string) => {
 
   //--check if outage exist or not
-=======
-const deleteOutageFromDb=async(outageId:string,requestedUserId:string)=>{
-
-//--check if outage exist or not
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 
   const outage = await prisma.outage.findUnique({
     where: {
@@ -567,11 +511,7 @@ const deleteOutageFromDb=async(outageId:string,requestedUserId:string)=>{
   }
 
 
-<<<<<<< HEAD
   //can not delte other outage 
-=======
-//can not delte other outage 
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
   if (outage.userId !== requestedUserId) {
     throw new AppError(
       httpStatus.FORBIDDEN,
@@ -579,11 +519,7 @@ const deleteOutageFromDb=async(outageId:string,requestedUserId:string)=>{
     );
   }
 
-<<<<<<< HEAD
   //if already deleted
-=======
-//if already deleted
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
   if (outage.isDeleted) {
     throw new AppError(httpStatus.BAD_REQUEST, "Outage is already deleted");
   }
@@ -618,13 +554,9 @@ const deleteOutageFromDb=async(outageId:string,requestedUserId:string)=>{
 export const OutageService = {
   createOutageInDb,
   getAllOutageFromDb,
-<<<<<<< HEAD
   getOutageCountsFromDb,
   getCurrentUserAddedAllOutagesFromDb,
   getCurrentTechnicianAssignedOutagesFromDb,
-=======
-  getCurrentUserAddedAllOutagesFromDb,
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
   getOutageDetailsFromDb,
   updateOutageInDb,
   assignTechnician,

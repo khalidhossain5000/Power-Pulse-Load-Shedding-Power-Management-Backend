@@ -14,21 +14,12 @@ router.post("/",auth(Role.ADMIN),validateRequest(plannedOutageValidation.createP
 
 router.get("/",PlannedOutageController.getAllPlannedOutageSchdeule)
 
-<<<<<<< HEAD
 //-3 get planned outage details customer admin only
 router.get("/:plannedOutageId",auth(Role.CUSTOMER,Role.ADMIN),PlannedOutageController.getPlannedOutageDetails)
 
 
 //-4 more update status overall will done later for admin accoridong to business logic
 router.patch("/:plannedOutageId",auth(Role.ADMIN),validateRequest(plannedOutageValidation.updatePlannedOutageZodSchema),PlannedOutageController.updatePlannedOutageSchedule)
-=======
-//-3 get planned outage details customer only
-router.get("/:plannedOutageId",auth(Role.CUSTOMER,Role.ADMIN),PlannedOutageController.getAllPlannedOutageSchdeule)
-
-
-//-4 more update status overall will done later for admin accoridong to business logic
-router.patch("/:plannedOutageId",auth(Role.ADMIN),validateRequest(plannedOutageValidation.updatePlannedOutageZodSchema),PlannedOutageController.getAllPlannedOutageSchdeule)
->>>>>>> bbae1d371764ee750656edc838ec5bc2df4db4c8
 
 
 
