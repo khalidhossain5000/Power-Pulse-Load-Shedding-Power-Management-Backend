@@ -755,7 +755,7 @@ if(user.authProvider===AuthProvider.GOOGLE) throw new AppError(httpStatus.CONFLI
 	await transporter.sendMail({
 		from: config.smtp_user,
 		to: email,
-		subject: "Email verification otp ",
+		subject: "Forgot Password Email Verify OTP",
 		html,
 	});
 }
