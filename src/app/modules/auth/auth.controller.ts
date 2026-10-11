@@ -239,13 +239,14 @@ const logout=catchAsync(async(req:Request,res:Response)=>{
 //reset password
 
 const verifyForgotEmailAndOtpSend = catchAsync(async (req: Request, res: Response) => {
-  
+  const email=req.body.email;
+  const result=await authServices.verifyForgotPasswordAccountEmailAndSendOtp(email as string)
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "Otp send to this email successfully",
-    data: null
+    data: result
   });
 });
 
