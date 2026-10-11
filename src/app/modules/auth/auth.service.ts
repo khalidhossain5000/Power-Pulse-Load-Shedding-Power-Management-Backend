@@ -816,9 +816,18 @@ const { otp } = payload;
 	    "5m" as SignOptions,
 	);
 	
-	return {
+	const resetKey=`reset-token:${email}`
+	
+	const redisResetTokenPayload={
 		resetToken
 	}
+
+	await redisClient.set(resetKey,JSON.stringify(redisResetTokenPayload),{
+		expiration: {
+				type: "EX",
+				value: 5 * 60,
+			},
+	})
 }
 
 

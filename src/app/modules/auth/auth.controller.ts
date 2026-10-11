@@ -251,7 +251,23 @@ const verifyForgotEmailAndOtpSend = catchAsync(async (req: Request, res: Respons
 });
 
 
-const verifyReset
+
+const verifyResetOtp = catchAsync(async (req: Request, res: Response) => {
+  const payload = req.body;
+   await authServices.verifyForgotPasswordOtp(payload);
+
+  
+  
+ 
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Reset otp",
+    data: null
+  });
+});
+
 
 export const authController = {
   registerUser,
@@ -264,5 +280,6 @@ export const authController = {
   getMe,
   getTechnicianCount,
   updateUserProfile,
-  logout
+  logout,
+  verifyResetOtp
 };
