@@ -831,8 +831,18 @@ const { otp } = payload;
 }
 
 
+//reset password
+
+const resetPasswordInDb=async(payload:{
+	email:string;
+	newPassword:string
+})=>{
+
+}
+
 
 export const authServices = {
+	resetPasswordInDb,
 	registerUserInDb,
 	resendOtpForRegistration,
 	verifyOtpAndCreateUser,
