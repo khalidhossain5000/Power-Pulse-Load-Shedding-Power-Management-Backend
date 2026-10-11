@@ -760,6 +760,14 @@ if(user.authProvider===AuthProvider.GOOGLE) throw new AppError(httpStatus.CONFLI
 	});
 }
 
+
+
+const verifyForgotPasswordOtp=async(otp:string)=>{
+
+}
+
+
+
 export const authServices = {
 	registerUserInDb,
 	resendOtpForRegistration,
@@ -770,6 +778,7 @@ export const authServices = {
 	getMe,
 	getTechnicianCount,
 	updateUserProfileInDb,
-	verifyForgotPasswordAccountEmailAndSendOtp
+	verifyForgotPasswordAccountEmailAndSendOtp,
+	verifyForgotPasswordOtp
 }
 
