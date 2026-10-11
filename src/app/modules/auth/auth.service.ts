@@ -705,6 +705,59 @@ if(user.status===UserStatus.BAN) throw new AppError(httpStatus.BAD_REQUEST,"Your
 if(user.authProvider===AuthProvider.GOOGLE) throw new AppError(httpStatus.CONFLICT,"This email is not registered with password Please login with google")
 
 	
+	//2.1 get otp value
+	const otpValue = crypto.randomInt(100000, 1000000).toString();
+	const otpKey = `forgot-password-email-verify-otp:${email}`;
+	//set the otp in redis with expiration
+	await redisClient.set(otpKey, otpValue, {
+		expiration: {
+			type: "EX",
+			value: 5 * 60,  // 5 minutes in seconds
+		},
+	});
+
+	//2.2 storing the user data in redis
+	const userEmailKey = `user-email:${email}`;
+
+	const redisUserDataPayload = {
+
+		email
+		
+	};
+
+	await redisClient.set(
+		userEmailKey,
+		JSON.stringify(redisUserDataPayload),
+		{
+			expiration: {
+				type: "EX",
+				value: 5 * 60,
+			},
+		},
+	);
+
+	//redis store end
+
+	//send email fuunc logic over here
+
+	const templatePath = path.join(
+		process.cwd(),
+		"src/app/templates/forgot-email-verify.ejs",
+	);
+	const templateData = {
+		name,
+		otp: otpValue,
+		expirationTime: 10,
+	};
+
+	const html = await ejs.renderFile(templatePath, templateData);
+
+	await transporter.sendMail({
+		from: config.smtp_user,
+		to: email,
+		subject: "Email verification otp ",
+		html,
+	});
 }
 
 export const authServices = {
