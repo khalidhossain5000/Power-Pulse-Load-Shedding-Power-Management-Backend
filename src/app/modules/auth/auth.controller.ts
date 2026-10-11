@@ -274,9 +274,6 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
    await authServices.verifyForgotPasswordOtp(payload);
 
-  
-  
- 
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

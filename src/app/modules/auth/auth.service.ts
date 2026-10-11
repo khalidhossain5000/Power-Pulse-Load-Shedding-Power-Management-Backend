@@ -180,6 +180,7 @@ const verifyOtpAndCreateUser = async (payload: IVerifyEmailPayload) => {
 	const userRegisterKey = `user-registration-data:${email}`;
 
 	const redisUserData = await redisClient.get(userRegisterKey);
+
 	if (!redisUserData) throw new AppError(httpStatus.BAD_REQUEST, "User data not found,Otp is expired,Please register again");
 
 	const userPayload: IRegisterUser = JSON.parse(redisUserData);
@@ -837,6 +838,38 @@ const resetPasswordInDb=async(payload:{
 	email:string;
 	newPassword:string
 })=>{
+	const email = payload.email.trim().toLowerCase();
+
+		const resetKey=`reset-token:${email}`
+
+		const resetTokenFromRedis=await redisClient.get(resetKey)
+
+	if(!resetTokenFromRedis) throw new AppError(httpStatus.UNAUTHORIZED,"Your Session Has Been Expired,Try Again!")
+		const resetToken=JSON.parse(resetTokenFromRedis)
+
+		const verifiedResetToken = jwtUtils.verifyToken(
+		resetToken,
+		config.jwt_access_secret,
+	);
+
+	if(!verifiedResetToken) throw new AppError(httpStatus.UNAUTHORIZED,"Invalid reset token Try Again")
+
+
+//now token are valid and email is verifeid reset the password
+
+const hashedPassword = await bcrypt.hash(payload.newPassword, 10);
+
+
+   await prisma.user.update({
+	where:{
+		email
+	},
+	data:{
+		password:hashedPassword
+	}
+})
+
+
 
 }
 
