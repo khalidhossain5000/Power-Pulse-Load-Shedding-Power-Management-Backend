@@ -687,6 +687,12 @@ const updateUserProfileInDb = async (payload: IUpadteUserProfile, profileImage: 
 
 }
 
+//forgot password related api service
+
+const verifyForgotPasswordAccountEmailAndSendOtp=(email:string)=>{
+
+}
+
 export const authServices = {
 	registerUserInDb,
 	resendOtpForRegistration,
@@ -696,6 +702,7 @@ export const authServices = {
 	googleLogin,
 	getMe,
 	getTechnicianCount,
-	updateUserProfileInDb
+	updateUserProfileInDb,
+	verifyForgotPasswordAccountEmailAndSendOtp
 }
 

@@ -236,6 +236,19 @@ const logout=catchAsync(async(req:Request,res:Response)=>{
 	})
 })
 
+//reset password
+
+const verifyForgotEmailAndOtpSend = catchAsync(async (req: Request, res: Response) => {
+  
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Otp send to this email successfully",
+    data: null
+  });
+});
+
 export const authController = {
   registerUser,
   verifyUserEmail,
@@ -243,6 +256,7 @@ export const authController = {
   loginUser,
   refreshToken,
   googleLoginUser,
+  verifyForgotEmailAndOtpSend,
   getMe,
   getTechnicianCount,
   updateUserProfile,
