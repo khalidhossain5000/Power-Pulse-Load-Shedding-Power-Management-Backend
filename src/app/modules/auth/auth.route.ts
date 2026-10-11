@@ -48,4 +48,8 @@ router.patch("/update-profile",auth(Role.ADMIN,Role.CUSTOMER,Role.TECHNICIAN),up
 router.get("/get-me",auth(Role.ADMIN,Role.TECHNICIAN,Role.CUSTOMER), authController.getMe);
 
 
+//reset password route are start here
+
+router.post("/forgot-password-otp")
+
 export const AuthRoutes = router;
