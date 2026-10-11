@@ -745,9 +745,9 @@ if(user.authProvider===AuthProvider.GOOGLE) throw new AppError(httpStatus.CONFLI
 		"src/app/templates/forgot-email-verify.ejs",
 	);
 	const templateData = {
-		name,
+		name:user.name,
 		otp: otpValue,
-		expirationTime: 10,
+		expirationTime: 5,
 	};
 
 	const html = await ejs.renderFile(templatePath, templateData);
