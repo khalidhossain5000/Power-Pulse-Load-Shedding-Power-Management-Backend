@@ -257,8 +257,6 @@ const verifyForgotPassOtp = catchAsync(async (req: Request, res: Response) => {
    await authServices.verifyForgotPasswordOtp(payload);
 
   
-  
- 
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -272,7 +270,7 @@ const verifyForgotPassOtp = catchAsync(async (req: Request, res: Response) => {
 
 const resetPassword = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
-   await authServices.verifyForgotPasswordOtp(payload);
+   await authServices.resetPasswordInDb(payload);
 
 
   sendResponse(res, {
