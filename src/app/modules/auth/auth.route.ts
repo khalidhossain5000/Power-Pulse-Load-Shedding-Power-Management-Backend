@@ -18,9 +18,8 @@ router.post("/resen-otp", validateRequest(userValidation.resendOtpSchema), authC
 
 router.post("/login", validateRequest(userValidation.loginSchema), authController.loginUser)
 
-router.post("/register",validateRequest(userValidation.registerUserValidationZodSchema),authController.registerUser)
 
-router.post("/verify-email",authController.verifyUserEmail)
+
 
 router.post("/login",validateRequest(userValidation.loginSchema),authController.loginUser)
 
@@ -50,6 +49,11 @@ router.get("/get-me",auth(Role.ADMIN,Role.TECHNICIAN,Role.CUSTOMER), authControl
 
 //reset password route are start here
 
-router.post("/forgot-password-otp", authController.verifyForgotEmailAndOtpSend);
+router.post("/forgot-password-otp", authController.verifyForgotEmailAndOtpSend)
+
+router.post("/verify-password-otp", authController.verifyForgotPassOtp)
+
+
+router.patch("/reset-password", authController.resetPassword)
 
 export const AuthRoutes = router;
