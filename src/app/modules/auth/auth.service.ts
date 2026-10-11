@@ -689,7 +689,18 @@ const updateUserProfileInDb = async (payload: IUpadteUserProfile, profileImage: 
 
 //forgot password related api service
 
-const verifyForgotPasswordAccountEmailAndSendOtp=(email:string)=>{
+const verifyForgotPasswordAccountEmailAndSendOtp=async (email:string)=>{
+//s-1 check if account exisits withthis email
+const user=await prisma.user.findUnique({
+	where:{
+		email
+	}
+})
+
+if(!user) throw new AppError(httpStatus.NOT_FOUND, "User not exist with this email,Register first")
+
+	
+
 
 }
 
