@@ -699,9 +699,12 @@ const user=await prisma.user.findUnique({
 
 if(!user) throw new AppError(httpStatus.NOT_FOUND, "User not exist with this email,Register first")
 
+//s-2 check if user is ban and check if user provider is google or not
+
+if(user.status===UserStatus.BAN) throw new AppError(httpStatus.BAD_REQUEST,"Your account is banned,Contact support for more details")
+if(user.authProvider===AuthProvider.GOOGLE) throw new AppError(httpStatus.CONFLICT,"This email is not registered with password Please login with google")
+
 	
-
-
 }
 
 export const authServices = {
