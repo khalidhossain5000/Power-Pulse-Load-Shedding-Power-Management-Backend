@@ -50,6 +50,6 @@ router.get("/get-me",auth(Role.ADMIN,Role.TECHNICIAN,Role.CUSTOMER), authControl
 
 //reset password route are start here
 
-router.post("/forgot-password-otp", authController.verifyForgotEmailAndOtpSend)
+router.post("/forgot-password-otp", authController.verifyForgotEmailAndOtpSend);
 
 export const AuthRoutes = router;

@@ -252,7 +252,7 @@ const verifyForgotEmailAndOtpSend = catchAsync(async (req: Request, res: Respons
 
 
 
-const verifyResetOtp = catchAsync(async (req: Request, res: Response) => {
+const verifyForgotPassOtp = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
    await authServices.verifyForgotPasswordOtp(payload);
 
@@ -263,7 +263,7 @@ const verifyResetOtp = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Reset otp",
+    message: "Otp verified successfully",
     data: null
   });
 });
@@ -278,7 +278,7 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Reset otp",
+    message: "Your password has been reset successfully",
     data: null
   });
 });
@@ -298,5 +298,5 @@ export const authController = {
   getTechnicianCount,
   updateUserProfile,
   logout,
-  verifyResetOtp
+  verifyForgotPassOtp
 };
