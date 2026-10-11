@@ -762,8 +762,63 @@ if(user.authProvider===AuthProvider.GOOGLE) throw new AppError(httpStatus.CONFLI
 
 
 
-const verifyForgotPasswordOtp=async(otp:string)=>{
+const verifyForgotPasswordOtp=async(payload:{
+	otp:string,
+	email:string
+})=>{
+const { otp } = payload;
 
+	const email = payload.email.trim().toLowerCase();
+
+	const user = await prisma.user.findUnique({
+		where: { email },
+	});
+
+
+
+	if (!user) throw new AppError(httpStatus.NOT_FOUND, "User not found with this email");
+
+	if (user?.status === "BAN") throw new AppError(httpStatus.FORBIDDEN, "User is banned,Please contact support for more information");
+
+	//otp verify
+
+	const otpKey = `forgot-password-email-verify-otp:${email}`;
+	const redisOtp = await redisClient.get(otpKey);
+
+	if (!redisOtp) throw new AppError(httpStatus.BAD_REQUEST,
+	 "OTP expired or not found,Please register again");
+
+	if (redisOtp !== otp) throw new AppError(httpStatus.BAD_REQUEST, "Invalid OTP,Please try again");
+
+	redisClient.del(otpKey);
+
+
+
+	//get user info from redis
+
+		const userEmailKey = `user-email:${email}`;
+
+	const redisUserEmail = await redisClient.get(userEmailKey);
+
+	if (!redisUserEmail) throw new AppError(httpStatus.BAD_REQUEST, "User email not found,Otp is expired,Please try again later");
+
+	const userPayload = JSON.parse(redisUserEmail);
+
+	//otp match create reset token using jwt
+	const resetPayload={
+		id:user.id,
+		email:userPayload.email
+	}
+
+	const resetToken=jwtUtils.createToken(
+		resetPayload,
+		config.jwt_access_secret,
+	    "5m" as SignOptions,
+	);
+	
+	return {
+		resetToken
+	}
 }
 
 

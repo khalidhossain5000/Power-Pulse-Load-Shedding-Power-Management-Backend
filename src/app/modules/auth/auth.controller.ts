@@ -250,6 +250,9 @@ const verifyForgotEmailAndOtpSend = catchAsync(async (req: Request, res: Respons
   });
 });
 
+
+const verifyReset
+
 export const authController = {
   registerUser,
   verifyUserEmail,
