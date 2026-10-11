@@ -276,7 +276,7 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Your password has been reset successfully",
+    message: "Your password has been reset successfully!Login now",
     data: null
   });
 });
