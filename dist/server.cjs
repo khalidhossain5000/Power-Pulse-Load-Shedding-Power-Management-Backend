@@ -1015,7 +1015,118 @@ var updateUserProfileInDb = async (payload, profileImage, userId) => {
   });
   return updatedUser;
 };
+var verifyForgotPasswordAccountEmailAndSendOtp = async (email) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      email
+    }
+  });
+  if (!user) throw new AppError(import_http_status3.default.NOT_FOUND, "User not exist with this email,Register first");
+  if (user.status === UserStatus.BAN) throw new AppError(import_http_status3.default.BAD_REQUEST, "Your account is banned,Contact support for more details");
+  if (user.authProvider === AuthProvider.GOOGLE) throw new AppError(import_http_status3.default.CONFLICT, "This email is not registered with password Please login with google");
+  const otpValue = import_crypto.default.randomInt(1e5, 1e6).toString();
+  const otpKey = `forgot-password-email-verify-otp:${email}`;
+  await redisClient.set(otpKey, otpValue, {
+    expiration: {
+      type: "EX",
+      value: 5 * 60
+      // 5 minutes in seconds
+    }
+  });
+  const userEmailKey = `user-email:${email}`;
+  const redisUserDataPayload = {
+    email
+  };
+  await redisClient.set(
+    userEmailKey,
+    JSON.stringify(redisUserDataPayload),
+    {
+      expiration: {
+        type: "EX",
+        value: 5 * 60
+      }
+    }
+  );
+  const templatePath = import_path2.default.join(
+    process.cwd(),
+    "src/app/templates/forgot-email-verify.ejs"
+  );
+  const templateData = {
+    name: user.name,
+    otp: otpValue,
+    expirationTime: 5
+  };
+  const html = await import_ejs.default.renderFile(templatePath, templateData);
+  await transporter.sendMail({
+    from: config_default.smtp_user,
+    to: email,
+    subject: "Forgot Password Email Verify OTP",
+    html
+  });
+};
+var verifyForgotPasswordOtp = async (payload) => {
+  const { otp } = payload;
+  const email = payload.email.trim().toLowerCase();
+  const user = await prisma.user.findUnique({
+    where: { email }
+  });
+  if (!user) throw new AppError(import_http_status3.default.NOT_FOUND, "User not found with this email");
+  if (user?.status === "BAN") throw new AppError(import_http_status3.default.FORBIDDEN, "User is banned,Please contact support for more information");
+  const otpKey = `forgot-password-email-verify-otp:${email}`;
+  const redisOtp = await redisClient.get(otpKey);
+  if (!redisOtp) throw new AppError(
+    import_http_status3.default.BAD_REQUEST,
+    "OTP expired or not found,Please register again"
+  );
+  if (redisOtp !== otp) throw new AppError(import_http_status3.default.BAD_REQUEST, "Invalid OTP,Please try again");
+  redisClient.del(otpKey);
+  const userEmailKey = `user-email:${email}`;
+  const redisUserEmail = await redisClient.get(userEmailKey);
+  if (!redisUserEmail) throw new AppError(import_http_status3.default.BAD_REQUEST, "User email not found,Otp is expired,Please try again later");
+  const userPayload = JSON.parse(redisUserEmail);
+  const resetPayload = {
+    id: user.id,
+    email: userPayload.email
+  };
+  const resetToken = jwtUtils.createToken(
+    resetPayload,
+    config_default.jwt_access_secret,
+    "5m"
+  );
+  const resetKey = `reset-token:${email}`;
+  const redisResetTokenPayload = {
+    resetToken
+  };
+  await redisClient.set(resetKey, JSON.stringify(redisResetTokenPayload), {
+    expiration: {
+      type: "EX",
+      value: 5 * 60
+    }
+  });
+};
+var resetPasswordInDb = async (payload) => {
+  const email = payload.email.trim().toLowerCase();
+  const resetKey = `reset-token:${email}`;
+  const resetTokenFromRedis = await redisClient.get(resetKey);
+  if (!resetTokenFromRedis) throw new AppError(import_http_status3.default.UNAUTHORIZED, "Your Session Has Been Expired,Try Again!");
+  const resetToken = JSON.parse(resetTokenFromRedis);
+  const verifiedResetToken = jwtUtils.verifyToken(
+    resetToken,
+    config_default.jwt_access_secret
+  );
+  if (!verifiedResetToken) throw new AppError(import_http_status3.default.UNAUTHORIZED, "Invalid reset token Try Again");
+  const hashedPassword = await import_bcryptjs.default.hash(payload.newPassword, 10);
+  await prisma.user.update({
+    where: {
+      email
+    },
+    data: {
+      password: hashedPassword
+    }
+  });
+};
 var authServices = {
+  resetPasswordInDb,
   registerUserInDb,
   resendOtpForRegistration,
   verifyOtpAndCreateUser,
@@ -1024,7 +1135,9 @@ var authServices = {
   googleLogin,
   getMe,
   getTechnicianCount,
-  updateUserProfileInDb
+  updateUserProfileInDb,
+  verifyForgotPasswordAccountEmailAndSendOtp,
+  verifyForgotPasswordOtp
 };
 
 // src/app/utils/sendResponse.ts
@@ -1221,17 +1334,50 @@ var logout = catchAsync(async (req, res) => {
     data: null
   });
 });
+var verifyForgotEmailAndOtpSend = catchAsync(async (req, res) => {
+  const email = req.body.email;
+  const result = await authServices.verifyForgotPasswordAccountEmailAndSendOtp(email);
+  sendResponse(res, {
+    statusCode: import_http_status4.default.OK,
+    success: true,
+    message: "Otp send to this email successfully",
+    data: result
+  });
+});
+var verifyForgotPassOtp = catchAsync(async (req, res) => {
+  const payload = req.body;
+  await authServices.verifyForgotPasswordOtp(payload);
+  sendResponse(res, {
+    statusCode: import_http_status4.default.OK,
+    success: true,
+    message: "Otp verified successfully",
+    data: null
+  });
+});
+var resetPassword = catchAsync(async (req, res) => {
+  const payload = req.body;
+  await authServices.resetPasswordInDb(payload);
+  sendResponse(res, {
+    statusCode: import_http_status4.default.OK,
+    success: true,
+    message: "Your password has been reset successfully!Login now",
+    data: null
+  });
+});
 var authController = {
   registerUser,
   verifyUserEmail,
   resendOtp,
   loginUser: loginUser2,
+  resetPassword,
   refreshToken: refreshToken2,
   googleLoginUser,
+  verifyForgotEmailAndOtpSend,
   getMe: getMe2,
   getTechnicianCount: getTechnicianCount2,
   updateUserProfile,
-  logout
+  logout,
+  verifyForgotPassOtp
 };
 
 // src/app/middlewares/checkAuth.ts
@@ -1337,12 +1483,18 @@ router.post("/verify-email", authController.verifyUserEmail);
 router.post("/resend-otp", validateRequest(userValidation.resendOtpSchema), authController.resendOtp);
 router.post("/resen-otp", validateRequest(userValidation.resendOtpSchema), authController.resendOtp);
 router.post("/login", validateRequest(userValidation.loginSchema), authController.loginUser);
+router.post("/login", validateRequest(userValidation.loginSchema), authController.loginUser);
 router.post("/refresh-token", authController.refreshToken);
 router.post("/google-login", authController.googleLoginUser);
 router.post("/logout", authController.logout);
 router.patch("/update-profile", auth(Role.ADMIN, Role.CUSTOMER, Role.TECHNICIAN), upload.single("profileImage"), authController.updateUserProfile);
 router.get("/get-me", auth(Role.ADMIN, Role.TECHNICIAN, Role.CUSTOMER), authController.getMe);
 router.get("/technician-count", authController.getTechnicianCount);
+router.patch("/update-profile", auth(Role.ADMIN, Role.CUSTOMER, Role.TECHNICIAN), upload.single("profileImage"), authController.updateUserProfile);
+router.get("/get-me", auth(Role.ADMIN, Role.TECHNICIAN, Role.CUSTOMER), authController.getMe);
+router.post("/forgot-password-otp", authController.verifyForgotEmailAndOtpSend);
+router.post("/verify-password-otp", authController.verifyForgotPassOtp);
+router.patch("/reset-password", authController.resetPassword);
 var AuthRoutes = router;
 
 // src/app/modules/technicianProfile/technician-profile.route.ts
@@ -1673,7 +1825,8 @@ var import_zod3 = __toESM(require("zod"), 1);
 var createZoneZodSchema = import_zod3.default.object({
   name: import_zod3.default.string("Name is not a string").min(5, "Name should minimum have 5 char").max(100, "Name should not be more than 100 chars"),
   code: import_zod3.default.string("Not a string").min(5, "Code should minimum have 5 char").max(10, "Max 10 chars"),
-  description: import_zod3.default.string("Not a string").min(5, "Description should minimum have 5 char").max(150, "Max 150 chars")
+  description: import_zod3.default.string("Not a string").min(5, "Description should minimum have 5 char").max(150, "Max 150 chars"),
+  status: import_zod3.default.enum(["ACTIVE", "INACTIVE"])
 });
 var updateZoneZodSchema = createZoneZodSchema.partial().refine(
   (payload) => Object.keys(payload).length > 0,
@@ -2064,7 +2217,8 @@ var getFeederDetails = async (feederId) => {
     },
     include: {
       areas: true,
-      substation: true
+      substation: true,
+      zone: true
     }
   });
   return substationDetails;
@@ -2235,7 +2389,9 @@ var getAllAreaFromDb = async (query) => {
       [sortBy]: sortOrder
     },
     include: {
-      feeder: true
+      feeder: true,
+      substation: true,
+      zone: true
     }
   });
   const totalAreaCount = await prisma.area.count({
@@ -2259,7 +2415,9 @@ var getAreaDetails = async (areaId) => {
       id: areaId
     },
     include: {
-      feeder: true
+      feeder: true,
+      substation: true,
+      zone: true
     }
   });
   return areaDetails;
@@ -2600,7 +2758,7 @@ var assignTechnician = async (outageId, technicianId) => {
   });
   return transactionResult;
 };
-var updateOutageStatusInDb = async (outageId, status, userId, userRole) => {
+var updateOutageStatusInDb = async (outageId, status2, userId, userRole) => {
   const outage = await prisma.outage.findUnique({
     where: {
       id: outageId
@@ -2618,10 +2776,10 @@ var updateOutageStatusInDb = async (outageId, status, userId, userRole) => {
   if (outage.isDeleted) {
     throw new AppError(import_http_status17.default.NOT_FOUND, "Outage is deleted");
   }
-  if (outage.status === status) {
-    throw new AppError(import_http_status17.default.BAD_REQUEST, `Outage is already ${status}`);
+  if (outage.status === status2) {
+    throw new AppError(import_http_status17.default.BAD_REQUEST, `Outage is already ${status2}`);
   }
-  if (status === OutageStatus.ACKNOWLEDGED) {
+  if (status2 === OutageStatus.ACKNOWLEDGED) {
     if (userRole !== Role.ADMIN) {
       throw new AppError(
         import_http_status17.default.FORBIDDEN,
@@ -2645,7 +2803,7 @@ var updateOutageStatusInDb = async (outageId, status, userId, userRole) => {
     });
     return updatedOutage;
   }
-  if (status === OutageStatus.IN_PROGRESS) {
+  if (status2 === OutageStatus.IN_PROGRESS) {
     if (userRole !== Role.TECHNICIAN) {
       throw new AppError(
         import_http_status17.default.FORBIDDEN,
@@ -2675,7 +2833,7 @@ var updateOutageStatusInDb = async (outageId, status, userId, userRole) => {
     });
     return updatedOutage;
   }
-  if (status === OutageStatus.RESTORED) {
+  if (status2 === OutageStatus.RESTORED) {
     if (userRole !== Role.TECHNICIAN) {
       throw new AppError(
         import_http_status17.default.FORBIDDEN,
@@ -2717,7 +2875,7 @@ var updateOutageStatusInDb = async (outageId, status, userId, userRole) => {
   }
   throw new AppError(
     import_http_status17.default.BAD_REQUEST,
-    `Invalid outage status transition to ${status}`
+    `Invalid outage status transition to ${status2}`
   );
 };
 var deleteOutageFromDb = async (outageId, requestedUserId) => {
@@ -2857,12 +3015,12 @@ var assignTechnicianToReportedOutage = catchAsync(
 var updateOutageStatus = catchAsync(
   async (req, res) => {
     const { outageId } = req.params;
-    const { status } = req.body;
+    const { status: status2 } = req.body;
     const userId = req.user?.userId;
     const userRole = req.user?.role;
     const result = await OutageService.updateOutageStatusInDb(
       outageId,
-      status,
+      status2,
       userId,
       userRole
     );
@@ -3343,7 +3501,7 @@ var createPaymentInDb = async (outageReportId, customerId) => {
   });
   return { paymentGatewayUrl: data.GatewayPageURL };
 };
-var verifySslCommerzPayment = async (transId, status, val_id) => {
+var verifySslCommerzPayment = async (transId, status2, val_id) => {
   const response = await import_axios.default.post(
     `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${config_default.ssl_commerz_store_id}&store_passwd=${config_default.ssl_commerz_store_pass}&format=json
 `,
@@ -3391,7 +3549,7 @@ var verifySslCommerzPayment = async (transId, status, val_id) => {
       }
     });
   }
-  return status;
+  return status2;
 };
 var paymentHistoryFromDb = async (customerId) => {
   const result = await prisma.payment.findMany({
@@ -3453,17 +3611,17 @@ var createPayment = catchAsync(
 );
 var verifySslCommerzPayment2 = catchAsync(
   async (req, res, next) => {
-    const { tranId, status } = req.query;
+    const { tranId, status: status2 } = req.query;
     const val_id = req.body.val_id;
     await paymentServices.verifySslCommerzPayment(
       tranId,
-      status,
+      status2,
       val_id
     );
-    if (status === "success") {
+    if (status2 === "success") {
       return res.redirect(`${config_default.payment_result_redirect_base_url}/success.html`);
     }
-    if (status === "fail") {
+    if (status2 === "fail") {
       return res.redirect(`${config_default.payment_result_redirect_base_url}/failed.html`);
     }
     return res.redirect(`${config_default.payment_result_redirect_base_url}/cancel.html`);
@@ -3868,7 +4026,7 @@ var getAllUsersFromDb = async () => {
   });
   return result;
 };
-var updateUserStatus = async (userId, status) => {
+var updateUserStatus = async (userId, status2) => {
   const targetUser = await prisma.user.findUnique({
     where: {
       id: userId
@@ -3891,10 +4049,10 @@ var updateUserStatus = async (userId, status) => {
       "Admin cannot change another admins status"
     );
   }
-  if (targetUser.status === status) {
+  if (targetUser.status === status2) {
     throw new AppError(
       import_http_status25.default.BAD_REQUEST,
-      `User is already ${status}`
+      `User is already ${status2}`
     );
   }
   const updatedUser = await prisma.user.update({
@@ -3902,7 +4060,7 @@ var updateUserStatus = async (userId, status) => {
       id: userId
     },
     data: {
-      status
+      status: status2
     },
     omit: {
       password: true
@@ -4000,9 +4158,9 @@ var getAllUsers = catchAsync(async (req, res) => {
   });
 });
 var updateUserStatus2 = catchAsync(async (req, res) => {
-  const status = req.body.status;
+  const status2 = req.body.status;
   const targetUserId = req.params.userId;
-  const result = await AdminService.updateUserStatus(targetUserId, status);
+  const result = await AdminService.updateUserStatus(targetUserId, status2);
   sendResponse(res, {
     statusCode: import_http_status26.default.OK,
     success: true,
