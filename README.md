@@ -18,7 +18,7 @@ The application exposes a REST API under `/api/v1`.
 ## Project Links
 
 - **Repository:** [Link](https://github.com/khalidhossain5000/Power-Pulse-Load-Shedding-Power-Management-Backend.git)
-- **Live API:** [next-level-assignment-6.vercel.app](https://next-level-assignment-6.vercel.app/)
+- **Live API:** [Link](https://power-pulse-load-shedding-power-man.vercel.app)
 
 ## Core Features
 
