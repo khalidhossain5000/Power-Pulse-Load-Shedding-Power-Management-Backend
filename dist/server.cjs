@@ -4605,7 +4605,7 @@ var main = async () => {
     await transporter.verify();
     console.log("NOdema iler connected");
     app_default.listen(port, () => {
-      console.log(`Next Level Assignment 6 server is running on port ${port}`);
+      console.log(`Power Pulse server is running on port ${port}`);
     });
   } catch (error) {
     console.log(error, "error while server running");
