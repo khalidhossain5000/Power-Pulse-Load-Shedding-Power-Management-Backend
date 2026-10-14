@@ -107,8 +107,8 @@ Install the following before starting the project:
 1. Clone the repository and enter the project directory.
 
 ```bash
-git clone https://github.com/khalidhossain5000/Next-Level-Assignment-6.git
-cd Next-Level-Assignment-6
+git clone https://github.com/khalidhossain5000/Power-Pulse-Load-Shedding-Power-Management-Backend.git
+cd Power-Pulse-Load-Shedding-Power-Management-Backend
 ```
 
 2. Install dependencies.
