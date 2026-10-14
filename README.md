@@ -86,7 +86,7 @@ The application exposes a REST API under `/api/v1`.
 - **Email:** Nodemailer and EJS templates
 - **File storage:** Cloudinary
 - **Payments:** SSLCommerz
-- **Formatting and linting:** Biome
+- **Formatting and linting:** Biome 
 - **Build tool:** tsup
 
 ## Requirements
@@ -94,7 +94,7 @@ The application exposes a REST API under `/api/v1`.
 Install the following before starting the project:
 
 - Node.js 20 or later
-- npm
+- npm / bun
 - PostgreSQL
 - Redis
 - SMTP credentials for email features
