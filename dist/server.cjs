@@ -2390,8 +2390,9 @@ var getAllAreaFromDb = async (query) => {
     },
     include: {
       feeder: true,
-      substation: true,
-      zone: true
+      loadSheddings: true,
+      outages: true,
+      plannedOutages: true
     }
   });
   const totalAreaCount = await prisma.area.count({
@@ -3611,7 +3612,8 @@ var createPayment = catchAsync(
 );
 var verifySslCommerzPayment2 = catchAsync(
   async (req, res, next) => {
-    const { tranId, status: status2 } = req.query;
+    const { tranId, status: status2, outageReportId } = req.query;
+    console.log(outageReportId, "this is outage reporte id in control confirm");
     const val_id = req.body.val_id;
     await paymentServices.verifySslCommerzPayment(
       tranId,

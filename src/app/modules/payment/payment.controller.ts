@@ -34,8 +34,8 @@ const createPayment = catchAsync(
 const verifySslCommerzPayment = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
   
-    const {  tranId, status ,outageReportId} = req.query;
-console.log(outageReportId,"this is outage reporte id in control confirm")
+    const {  tranId, status ,outageReportId,customerId} = req.query;
+console.log(tranId , outageReportId,"FROM CONFIRM HERE this is outage reporte id in control confirm",customerId,"Thi si customer id")
     const val_id = req.body.val_id;
 
 
