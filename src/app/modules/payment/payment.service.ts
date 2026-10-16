@@ -2,7 +2,6 @@
 
 import axios from "axios";
 
-import PDFDocument from "pdfkit";
 
 import { prisma } from "../../lib/prisma";
 import httpStatus from "http-status";
