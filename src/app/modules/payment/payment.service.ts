@@ -22,7 +22,7 @@ const createPaymentInDb = async (
             role: Role.CUSTOMER
         },
     });
-    //payment will be done if rental request stasus is approved
+    //find outage if it is exist or not
     const outageReport = await prisma.outage.findUniqueOrThrow({
         where: {
             id: outageReportId,

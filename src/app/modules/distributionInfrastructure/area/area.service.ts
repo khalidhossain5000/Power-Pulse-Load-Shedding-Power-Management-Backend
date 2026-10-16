@@ -68,8 +68,10 @@ const getAllAreaFromDb = async (query: IQuery) => {
         },
         include: {
             feeder: true,
-            substation: true,
-            zone: true
+           loadSheddings:true,
+           outages:true,
+           plannedOutages:true
+         
         }
     })
 
