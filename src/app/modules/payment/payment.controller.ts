@@ -43,6 +43,8 @@ console.log(tranId , outageReportId,"FROM CONFIRM HERE this is outage reporte id
       tranId as string,
       status as string,
       val_id,
+      customerId as string,
+      outageReportId as string
     );
 
     if (status === "success") {
