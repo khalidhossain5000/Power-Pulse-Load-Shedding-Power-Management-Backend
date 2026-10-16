@@ -1,7 +1,8 @@
 //intiate payment and create payment
 
 import axios from "axios";
-import { PDFDocument } from 'pdfkit';
+
+import PDFDocument from "pdfkit";
 
 import { prisma } from "../../lib/prisma";
 import httpStatus from "http-status";
@@ -64,9 +65,9 @@ const createPaymentInDb = async (
         total_amount: config.outage_priority_payment_fee,
         currency: "BDT",
         tran_id: transId,
-        success_url: `${config.app_url}/api/v1/payment/confirm?outageReportId=${outageReportId}&tranId=${transId}&customerId=${customerId}&status=success`,
-        fail_url: `${config.app_url}/api/v1/payment/confirm?outageReportId=${outageReportId}&tranId=${transId}&customerId=${customerId}&status=fail`,
-        cancel_url: `${config.app_url}/api/v1/payment/confirm?outageReportId=${outageReportId}&tranId=${transId}&customerId=${customerId}&status=cancel`,
+        success_url: `${config.app_url}/api/v1/payment/confirm?outageReportId=${outageReportId}&tranId=${transId}&status=success`,
+        fail_url: `${config.app_url}/api/v1/payment/confirm?outageReportId=${outageReportId}&tranId=${transId}&status=fail`,
+        cancel_url: `${config.app_url}/api/v1/payment/confirm?outageReportId=${outageReportId}&tranId=${transId}&status=cancel`,
         cus_name: `${customer.name}`,
         cus_email: customer.email,
         cus_add1: "N/A",
@@ -115,8 +116,7 @@ const verifySslCommerzPayment = async (
     transId: string,
     status: string,
     val_id: string,
-    customerId:string,
-    outageId:string
+
 ) => {
     const response = await axios.post(
         `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=${config.ssl_commerz_store_id}&store_passwd=${config.ssl_commerz_store_pass}&format=json
@@ -127,7 +127,7 @@ const verifySslCommerzPayment = async (
     );
 
     const paymentData = response.data;
-console.log(customerId,outageId,"custoemr id outage id in service")
+
 
 
 
@@ -166,7 +166,12 @@ console.log(customerId,outageId,"custoemr id outage id in service")
                     priority: OutagePriority.HIGH
                 },
             });
+        //get customer and paid outage data
 
+       
+
+   
+            //create invoice pdf over here
 
         });
     } else if (
