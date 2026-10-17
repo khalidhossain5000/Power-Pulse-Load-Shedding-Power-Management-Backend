@@ -136,7 +136,7 @@ const verifySslCommerzPayment = async (
 
 //mai n update done here
     if (paymentData.status === "VALID") {
-        await prisma.$transaction(async (tx) => {
+      const verifiedPayment =  await prisma.$transaction(async (tx) => {
             const payment = await tx.payment.findUniqueOrThrow({
                 where: {
                     transactionId: transId,
