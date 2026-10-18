@@ -165,12 +165,14 @@ const verifySslCommerzPayment = async (
                     priority: OutagePriority.HIGH
                 },
             });
-        //get customer and paid outage data
-
-       
-
-   
-            //create invoice pdf over here
+        
+            return {
+                ...payment,
+                outage:{
+                    ...payment.outage,
+                    priority: OutagePriority.HIGH,
+                }
+            }
 
         });
     } else if (
