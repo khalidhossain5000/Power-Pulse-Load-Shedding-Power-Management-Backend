@@ -232,6 +232,33 @@ await transporter.sendMail({
     return status;
 };
 
+//get downloa d link of pdf invoice 
+const getInvoicePdf = async (
+    transId: string,
+    customerId: string,
+) => {
+    const payment = await prisma.payment.findFirstOrThrow({
+        where: {
+            transactionId: transId,
+            customerId,
+            status: PaymentStatus.COMPLETED,
+        },
+        include: {
+            customer: true,
+            outage: true,
+        },
+    });
+
+    const invoicePdf = await generateInvoicePdf({
+        transactionId: payment.transactionId,
+        amount: Number(payment.amount),
+        customer: payment.customer,
+        outage: payment.outage,
+    });
+
+    return invoicePdf;
+};
+
 
 //get  users payment history
 const paymentHistoryFromDb = async (customerId: string) => {

@@ -49,3 +49,12 @@ export const generateInvoicePdf = (
         doc.end();
     });
 };
+
+
+
+
+
+
+
+
+
