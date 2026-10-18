@@ -2,7 +2,8 @@
 
 import axios from "axios";
 
-
+import path from "path"
+import ejs from "ejs"
 import { prisma } from "../../lib/prisma";
 import httpStatus from "http-status";
 import { OutagePriority, PaymentStatus, Role } from "../../../generated/prisma/enums";
@@ -181,6 +182,37 @@ const verifySslCommerzPayment = async (
     amount: Number(verifiedPayment.amount),
     customer: verifiedPayment.customer,
     outage: verifiedPayment.outage,
+});
+const templatePath = path.join(
+    process.cwd(),
+    "src/app/templates/payment-invoice.ejs",
+);
+
+const html = await ejs.renderFile(templatePath, {
+    name: verifiedPayment.customer.name,
+    transactionId: verifiedPayment.transactionId,
+    amount: Number(verifiedPayment.amount).toFixed(2),
+    paidAt: new Date().toLocaleString("en-BD", {
+        dateStyle: "medium",
+        timeStyle: "short",
+        timeZone: "Asia/Dhaka",
+    }),
+    outageId: verifiedPayment.outage.id,
+    outageCause: verifiedPayment.outage.cause,
+});
+
+await transporter.sendMail({
+    from: config.smtp_user,
+    to: verifiedPayment.customer.email,
+    subject: "PowerPulse Payment Invoice",
+    html,
+    attachments: [
+        {
+            filename: `invoice-${verifiedPayment.transactionId}.pdf`,
+            content: invoicePdf,
+            contentType: "application/pdf",
+        },
+    ],
 });
     } else if (
         paymentData.status === "FAILED" ||
