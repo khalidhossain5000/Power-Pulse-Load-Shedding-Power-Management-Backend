@@ -9,6 +9,7 @@ import httpStatus from "http-status";
 import { OutagePriority, PaymentStatus, Role } from "../../../generated/prisma/enums";
 import config from "../../config";
 import { generateInvoicePdf } from "./payment.utils";
+import { transporter } from "../../lib/nodemailer";
 
 const createPaymentInDb = async (
     outageReportId: string,
