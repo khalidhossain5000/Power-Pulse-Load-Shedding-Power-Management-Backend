@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PowerPulse Payment Invoice</title>
+</head>
+
+<body style="margin: 0; padding: 0; background-color: #f3f4f6; font-family: Arial, sans-serif; color: #1f2937;">
+    <div style="max-width: 600px; margin: 30px auto; padding: 28px; background-color: #ffffff; border-radius: 12px;">
+
+        <div style="text-align: center; padding-bottom: 20px; border-bottom: 1px solid #e5e7eb;">
+            <h1 style="margin: 0; color: #009689;">PowerPulse</h1>
+            <p style="margin: 8px 0 0; color: #6b7280;">Payment Confirmation</p>
+        </div>
+
+        <div style="padding: 24px 0;">
+            <h2 style="margin-top: 0;">Hello <%= name %>,</h2>
+
+            <p>
+                Your payment has been successfully verified.
+                Your invoice is attached to this email as a PDF.
+            </p>
+
+            <div style="padding: 18px; background-color: #f9fafb; border-radius: 8px;">
+                <h3 style="margin-top: 0;">Payment Details</h3>
+
+                <p>
+                    <strong>Transaction ID:</strong>
+                    <%= transactionId %>
+                </p>
+
+                <p>
+                    <strong>Amount Paid:</strong>
+                    BDT <%= amount %>
+                </p>
+
+                <p>
+                    <strong>Payment Status:</strong>
+                    <span style="color: #009689; font-weight: bold;">COMPLETED</span>
+                </p>
+
+                <p>
+                    <strong>Payment Date:</strong>
+                    <%= paidAt %>
+                </p>
+            </div>
+
+            <div style="padding-top: 20px;">
+                <h3>Outage Report Details</h3>
+
+                <p>
+                    <strong>Report ID:</strong>
+                    <%= outageId %>
+                </p>
+
+                <p>
+                    <strong>Cause:</strong>
+                    <%= outageCause %>
+                </p>
+
+                <p>
+                    <strong>Priority:</strong>
+                    HIGH
+                </p>
+            </div>
+
+            <p style="margin-top: 24px;">
+                Please find your PDF invoice attached to this email.
+                You can also access your payment invoice from your PowerPulse dashboard
+                when it becomes available there.
+            </p>
+
+            <p>Thank you for using PowerPulse.</p>
+        </div>
+
+        <div style="border-top: 1px solid #e5e7eb; padding-top: 16px; text-align: center; color: #6b7280; font-size: 12px;">
+            <p>PowerPulse — Load Shedding &amp; Power Management System</p>
+            <p>This is an automated payment confirmation email.</p>
+        </div>
+
+    </div>
+</body>
+</html>
