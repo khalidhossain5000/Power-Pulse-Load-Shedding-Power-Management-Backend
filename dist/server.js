@@ -3404,7 +3404,125 @@ import httpsStatus from "http-status";
 
 // src/app/modules/payment/payment.service.ts
 import axios from "axios";
+import path4 from "path";
+import ejs2 from "ejs";
 import httpStatus21 from "http-status";
+
+// src/app/modules/payment/payment.utils.ts
+import PDFDocument from "pdfkit";
+var generateInvoicePdf = (payment) => {
+  return new Promise((resolve, reject) => {
+    const doc = new PDFDocument({
+      size: "A4",
+      margin: 50,
+      bufferPages: true
+    });
+    const chunks = [];
+    const primary = "#2563EB";
+    const dark = "#111827";
+    const muted = "#6B7280";
+    const border = "#E5E7EB";
+    const light = "#F8FAFC";
+    const green = "#15803D";
+    doc.on("data", (chunk) => chunks.push(chunk));
+    doc.on("end", () => resolve(Buffer.concat(chunks)));
+    doc.on("error", reject);
+    const pageWidth = doc.page.width;
+    const contentWidth = pageWidth - 100;
+    const left = 50;
+    const right = pageWidth - 50;
+    doc.save();
+    doc.rect(0, 0, pageWidth, 155).fill("#EFF6FF");
+    doc.restore();
+    doc.fillColor(primary).font("Helvetica-Bold").fontSize(27).text("PowerPulse", left, 38, {
+      continued: true
+    });
+    doc.fillColor(muted).font("Helvetica").fontSize(9).text("  |  POWER MANAGEMENT SYSTEM");
+    doc.fillColor(dark).font("Helvetica-Bold").fontSize(24).text("PAYMENT INVOICE", left, 88);
+    doc.fillColor(muted).font("Helvetica").fontSize(10).text("Official payment receipt", left, 121);
+    doc.roundedRect(right - 105, 35, 105, 27, 7).fill("#DCFCE7");
+    doc.fillColor(green).font("Helvetica-Bold").fontSize(9).text("\u2713  PAID", right - 105, 44, {
+      width: 105,
+      align: "center"
+    });
+    let y = 180;
+    doc.fillColor(muted).font("Helvetica-Bold").fontSize(9).text("PAYMENT SUMMARY", left, y);
+    y += 22;
+    doc.roundedRect(left, y, contentWidth, 100, 12).fill(light);
+    doc.roundedRect(left, y, 5, 100, 2).fill(primary);
+    doc.fillColor(muted).font("Helvetica").fontSize(10).text("TOTAL AMOUNT PAID", left + 20, y + 19);
+    doc.fillColor(dark).font("Helvetica-Bold").fontSize(25).text(`BDT ${payment.amount.toFixed(2)}`, left + 20, y + 39);
+    doc.fillColor(green).font("Helvetica-Bold").fontSize(9).text("COMPLETED", right - 115, y + 47, {
+      width: 95,
+      align: "right"
+    });
+    y += 128;
+    const drawSectionHeading = (title, top) => {
+      doc.fillColor(dark).font("Helvetica-Bold").fontSize(12).text(title, left, top);
+      doc.moveTo(left, top + 22).lineTo(right, top + 22).strokeColor(border).lineWidth(1).stroke();
+    };
+    drawSectionHeading("Customer Information", y);
+    y += 38;
+    doc.fillColor(muted).font("Helvetica").fontSize(9).text("CUSTOMER NAME", left, y);
+    doc.fillColor(dark).font("Helvetica-Bold").fontSize(11).text(payment.customer.name, left, y + 15, {
+      width: contentWidth / 2 - 15
+    });
+    doc.fillColor(muted).font("Helvetica").fontSize(9).text("EMAIL ADDRESS", left + contentWidth / 2, y);
+    doc.fillColor(dark).font("Helvetica").fontSize(10).text(payment.customer.email, left + contentWidth / 2, y + 15, {
+      width: contentWidth / 2
+    });
+    y += 60;
+    drawSectionHeading("Transaction Details", y);
+    y += 35;
+    doc.fillColor(muted).font("Helvetica").fontSize(10).text("Transaction ID", left, y);
+    doc.fillColor(dark).font("Helvetica-Bold").fontSize(10).text(payment.transactionId, left + 125, y, {
+      width: contentWidth - 125
+    });
+    y += 30;
+    doc.fillColor(muted).font("Helvetica").fontSize(10).text("Payment Status", left, y);
+    doc.fillColor(green).font("Helvetica-Bold").fontSize(10).text("COMPLETED", left + 125, y);
+    y += 45;
+    drawSectionHeading("Outage Report Details", y);
+    y += 35;
+    doc.fillColor(muted).font("Helvetica").fontSize(10).text("Outage Report ID", left, y);
+    doc.fillColor(dark).font("Helvetica").fontSize(10).text(payment.outage.id, left + 125, y, {
+      width: contentWidth - 125
+    });
+    y += 27;
+    doc.fillColor(muted).font("Helvetica").fontSize(10).text("Cause", left, y);
+    doc.fillColor(dark).font("Helvetica").fontSize(10).text(payment.outage.cause, left + 125, y, {
+      width: contentWidth - 125
+    });
+    y += 27;
+    doc.fillColor(muted).font("Helvetica").fontSize(10).text("Priority", left, y);
+    const priorityColor = payment.outage.priority.toUpperCase() === "HIGH" ? "#B91C1C" : payment.outage.priority.toUpperCase() === "MEDIUM" ? "#B45309" : "#15803D";
+    doc.fillColor(priorityColor).font("Helvetica-Bold").fontSize(10).text(payment.outage.priority, left + 125, y);
+    y += 27;
+    doc.fillColor(muted).font("Helvetica").fontSize(10).text("Description", left, y);
+    y += 17;
+    doc.fillColor(dark).font("Helvetica").fontSize(10).text(payment.outage.description, left, y, {
+      width: contentWidth,
+      lineGap: 4
+    });
+    const range = doc.bufferedPageRange();
+    for (let i = range.start; i < range.start + range.count; i++) {
+      doc.switchToPage(i);
+      const footerY = doc.page.height - 55;
+      doc.moveTo(left, footerY - 10).lineTo(right, footerY - 10).strokeColor(border).lineWidth(1).stroke();
+      doc.fillColor(muted).font("Helvetica").fontSize(8).text("PowerPulse | Power Management System", left, footerY, {
+        lineBreak: false
+      });
+      doc.fillColor(muted).font("Helvetica").fontSize(8).text(`Page ${i + 1} of ${range.count}`, right - 70, footerY, {
+        width: 70,
+        align: "right",
+        lineBreak: false
+      });
+    }
+    doc.end();
+  });
+};
+
+// src/app/modules/payment/payment.service.ts
 var createPaymentInDb = async (outageReportId, customerId) => {
   const transId = `TRX_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
   const customer = await prisma.user.findUniqueOrThrow({
@@ -3489,7 +3607,7 @@ var verifySslCommerzPayment = async (transId, status2, val_id) => {
   );
   const paymentData = response.data;
   if (paymentData.status === "VALID") {
-    await prisma.$transaction(async (tx) => {
+    const verifiedPayment = await prisma.$transaction(async (tx) => {
       const payment = await tx.payment.findUniqueOrThrow({
         where: {
           transactionId: transId
@@ -3516,6 +3634,48 @@ var verifySslCommerzPayment = async (transId, status2, val_id) => {
           priority: OutagePriority.HIGH
         }
       });
+      return {
+        ...payment,
+        outage: {
+          ...payment.outage,
+          priority: OutagePriority.HIGH
+        }
+      };
+    });
+    const invoicePdf = await generateInvoicePdf({
+      transactionId: verifiedPayment.transactionId,
+      amount: Number(verifiedPayment.amount),
+      customer: verifiedPayment.customer,
+      outage: verifiedPayment.outage
+    });
+    const templatePath = path4.join(
+      process.cwd(),
+      "src/app/templates/payment-invoice.ejs"
+    );
+    const html = await ejs2.renderFile(templatePath, {
+      name: verifiedPayment.customer.name,
+      transactionId: verifiedPayment.transactionId,
+      amount: Number(verifiedPayment.amount).toFixed(2),
+      paidAt: (/* @__PURE__ */ new Date()).toLocaleString("en-BD", {
+        dateStyle: "medium",
+        timeStyle: "short",
+        timeZone: "Asia/Dhaka"
+      }),
+      outageId: verifiedPayment.outage.id,
+      outageCause: verifiedPayment.outage.cause
+    });
+    await transporter.sendMail({
+      from: config_default.smtp_user,
+      to: verifiedPayment.customer.email,
+      subject: "PowerPulse Payment Invoice",
+      html,
+      attachments: [
+        {
+          filename: `invoice-${verifiedPayment.transactionId}.pdf`,
+          content: invoicePdf,
+          contentType: "application/pdf"
+        }
+      ]
     });
   } else if (paymentData.status === "FAILED" || paymentData.status === "INVALID_TRANSACTION") {
     await prisma.payment.update({
@@ -3528,6 +3688,26 @@ var verifySslCommerzPayment = async (transId, status2, val_id) => {
     });
   }
   return status2;
+};
+var getInvoicePdf = async (transId, customerId) => {
+  const payment = await prisma.payment.findFirstOrThrow({
+    where: {
+      transactionId: transId,
+      customerId,
+      status: PaymentStatus.COMPLETED
+    },
+    include: {
+      customer: true,
+      outage: true
+    }
+  });
+  const invoicePdf = await generateInvoicePdf({
+    transactionId: payment.transactionId,
+    amount: Number(payment.amount),
+    customer: payment.customer,
+    outage: payment.outage
+  });
+  return invoicePdf;
 };
 var paymentHistoryFromDb = async (customerId) => {
   const result = await prisma.payment.findMany({
@@ -3567,7 +3747,8 @@ var paymentServices = {
   createPaymentInDb,
   verifySslCommerzPayment,
   paymentHistoryFromDb,
-  paymentDetailsFromDb
+  paymentDetailsFromDb,
+  getInvoicePdf
 };
 
 // src/app/modules/payment/payment.controller.ts
@@ -3589,8 +3770,7 @@ var createPayment = catchAsync(
 );
 var verifySslCommerzPayment2 = catchAsync(
   async (req, res, next) => {
-    const { tranId, status: status2, outageReportId } = req.query;
-    console.log(outageReportId, "this is outage reporte id in control confirm");
+    const { tranId, status: status2 } = req.query;
     const val_id = req.body.val_id;
     await paymentServices.verifySslCommerzPayment(
       tranId,
@@ -3606,6 +3786,20 @@ var verifySslCommerzPayment2 = catchAsync(
     return res.redirect(`${config_default.payment_result_redirect_base_url}/cancel.html`);
   }
 );
+var downloadInvoice = catchAsync(async (req, res) => {
+  const { transId } = req.params;
+  const customerId = req.user?.userId;
+  const invoicePdf = await paymentServices.getInvoicePdf(
+    transId,
+    customerId
+  );
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename="invoice-${transId}.pdf"`
+  );
+  res.send(invoicePdf);
+});
 var getCustomersPaymentHistory = catchAsync(
   async (req, res, next) => {
     const customerId = req.user?.userId;
@@ -3640,13 +3834,19 @@ var paymentController = {
   createPayment,
   verifySslCommerzPayment: verifySslCommerzPayment2,
   getCustomersPaymentHistory,
-  getPaymentDetails
+  getPaymentDetails,
+  downloadInvoice
 };
 
 // src/app/modules/payment/payment.route.ts
 var router9 = Router9();
 router9.post("/create", auth(Role.CUSTOMER), paymentController.createPayment);
 router9.post("/confirm", paymentController.verifySslCommerzPayment);
+router9.get(
+  "/invoice/:transId/download",
+  auth(Role.CUSTOMER),
+  paymentController.downloadInvoice
+);
 router9.get("/", auth(Role.CUSTOMER), paymentController.getCustomersPaymentHistory);
 router9.get("/:paymentId", auth(Role.CUSTOMER, Role.ADMIN), paymentController.getPaymentDetails);
 var PaymentRoutes = router9;

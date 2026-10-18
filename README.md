@@ -45,6 +45,7 @@ The application exposes a REST API under `/api/v1`.
 
 - Customer outage reporting
 - Admin outage monitoring
+- Public outage counts for operational status summaries
 - Technician assignment
 - Outage status workflow
 - Priority-based outage handling
@@ -63,6 +64,7 @@ The application exposes a REST API under `/api/v1`.
 - SSLCommerz payment integration
 - Payment confirmation and verification
 - Customer payment history
+- PDF invoice delivery by email after successful payment, with an authenticated invoice download endpoint
 - Admin payment records and search
 - Priority restoration fee support
 
@@ -145,6 +147,7 @@ PORT=5000
 DATABASE_URL="postgresql://postgres:password@localhost:5432/power_pulse?schema=public"
 
 APP_URL=http://localhost:5000
+CORS_URL=http://localhost:3000
 FRONTEND_URL=http://localhost:3000
 
 BCRYPT_SALT_ROUNDS=12
@@ -187,7 +190,7 @@ PRIORITY_RESTORATION_FEE=100
 PAYMENT_RESULT_REDIRECT_BASE_URL=http://localhost:3000/payment
 ```
 
-`APP_URL` is used as the CORS origin by the current application configuration. Update it to the URL of the client application that will call the API.
+`CORS_URL` is used as the CORS origin; set it to the client application's origin. `APP_URL` is the public backend URL used to construct payment gateway callback URLs. `FRONTEND_URL` is retained for client configuration.
 
 ## Database and Seeding
 
@@ -260,7 +263,7 @@ https://next-level-assignment-6.vercel.app/api/v1
 http://localhost:5000/api/v1
 ```
 
-The current API includes 49 registered route declarations across authentication, infrastructure, outages, load shedding, payments, planned outages, administration, and analytics.
+The API currently exposes 62 distinct method/path endpoints across authentication, infrastructure, outages, load shedding, payments, planned outages, administration, and analytics. The complete inventory is in [API_DOCUMENTATION.md](API_DOCUMENTATION.md).
 
 ### Authentication
 

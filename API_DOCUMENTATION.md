@@ -3,7 +3,7 @@
 ## Overview
 
 - Base path: `/api/v1`
-- Total route endpoints: **59**
+- Total distinct method/path endpoints: **62**
 - Authentication: protected endpoints accept an access token from the `accessToken` cookie or an `Authorization` header.
 - Access labels: `Public`, `Customer only`, `Technician only`, `Admin only`, or the listed role combination.
 
@@ -61,47 +61,51 @@
 
 33. `POST /api/v1/outage` - Report an unexpected power outage. **Customer only**
 34. `GET /api/v1/outage` - Get all reported outages for administrative management. **Admin only**
-35. `GET /api/v1/outage` - Get outages reported by the authenticated customer. **Customer only**
-	`GET /api/v1/outage/my-assigned-outages` - Get all non-deleted outages assigned to the authenticated technician, regardless of status. **Technician only**
-36. `GET /api/v1/outage/:outageId` - Get outage details. **Admin, Customer, or Technician**
-37. `PATCH /api/v1/outage/:outageId` - Update reported outage details. Status cannot be changed here. **Customer only**
-38. `PATCH /api/v1/outage/:outageId/assign-technician` - Assign a technician to a reported outage. **Admin only**
-39. `PATCH /api/v1/outage/:outageId/status` - Update an outage's status according to the workflow. **Admin or Technician**
-40. `DELETE /api/v1/outage/:outageId` - Delete an outage. **Admin, Customer, or Technician**
+35. `GET /api/v1/outage/counts` - Get outage counts grouped by status. **Public**
+36. `GET /api/v1/outage/my-outage` - Get outages reported by the authenticated customer. **Customer only**
+37. `GET /api/v1/outage/my-assigned-outages` - Get non-deleted outages assigned to the authenticated technician. **Technician only**
+38. `GET /api/v1/outage/:outageId` - Get outage details. **Admin or Customer**
+39. `PATCH /api/v1/outage/:outageId` - Update reported outage details. Status cannot be changed here. **Customer only**
+40. `PATCH /api/v1/outage/:outageId/assign-technician` - Assign a technician to a reported outage. **Admin only**
+41. `PATCH /api/v1/outage/:outageId/status` - Update an outage's status according to the workflow. **Admin or Technician**
+42. `DELETE /api/v1/outage/:outageId` - Delete an outage. **Admin, Customer, or Technician**
 
-## 41. Load Shedding APIs
+## 43. Load Shedding APIs
 
-41. `POST /api/v1/load-shedding` - Create a load-shedding schedule. **Admin only**
-42. `GET /api/v1/load-shedding` - Get all load-shedding schedules. **Public**
-43. `GET /api/v1/load-shedding/:loadsheddingId` - Get details of a load-shedding schedule. **Admin, Customer, or Technician**
-44. `PATCH /api/v1/load-shedding/:loadsheddingId` - Update a load-shedding schedule. **Admin only**
+43. `POST /api/v1/load-shedding` - Create a load-shedding schedule. **Admin only**
+44. `GET /api/v1/load-shedding` - Get all load-shedding schedules. **Public**
+45. `GET /api/v1/load-shedding/:loadsheddingId` - Get details of a load-shedding schedule. **Admin, Customer, or Technician**
+46. `PATCH /api/v1/load-shedding/:loadsheddingId` - Update a load-shedding schedule. **Admin only**
 
-## 45. Payment APIs
+## 47. Payment APIs
 
-45. `POST /api/v1/payment/create` - Create a payment for the authenticated customer. **Customer only**
-46. `POST /api/v1/payment/confirm` - Confirm and verify an SSLCommerz payment. **Public**
-47. `GET /api/v1/payment` - Get the authenticated customer's payment history. **Customer only**
-48. `GET /api/v1/payment/:paymentId` - Get payment details. **Admin or Customer**
+47. `POST /api/v1/payment/create` - Create a payment for the authenticated customer. **Customer only**
+48. `POST /api/v1/payment/confirm` - Confirm and verify an SSLCommerz payment; redirects to the configured result page. **Public**
+49. `GET /api/v1/payment/invoice/:transId/download` - Download a PDF invoice for the authenticated customer's completed payment. **Customer only**
+50. `GET /api/v1/payment` - Get the authenticated customer's payment history. **Customer only**
+51. `GET /api/v1/payment/:paymentId` - Get payment details. **Admin or Customer**
 
-## 49. Planned Outage APIs
+Successful invoice downloads return `application/pdf` as an attachment named `invoice-<transId>.pdf`. The payment must be completed and belong to the authenticated customer. A PDF invoice is also emailed after successful payment verification.
 
-49. `POST /api/v1/planned-outage` - Create a planned outage schedule. **Admin only**
-50. `GET /api/v1/planned-outage` - Get all planned outage schedules. **Public**
-51. `GET /api/v1/planned-outage/:plannedOutageId` - Get details of a planned outage. **Admin or Customer**
-52. `PATCH /api/v1/planned-outage/:plannedOutageId` - Update a planned outage schedule. **Admin only**
+## 52. Planned Outage APIs
 
-## 53. Admin APIs
+52. `POST /api/v1/planned-outage` - Create a planned outage schedule. **Admin only**
+53. `GET /api/v1/planned-outage` - Get all planned outage schedules. **Public**
+54. `GET /api/v1/planned-outage/:plannedOutageId` - Get details of a planned outage. **Admin or Customer**
+55. `PATCH /api/v1/planned-outage/:plannedOutageId` - Update a planned outage schedule. **Admin only**
 
-53. `GET /api/v1/admin/users` - Get users with search and filtering for administration. **Admin only**
-54. `PATCH /api/v1/admin/users/:userId` - Update a user's status, such as banning or unbanning the user. **Admin only**
-55. `GET /api/v1/admin/technician` - Get technician users for management and outage assignment. **Admin only**
-56. `GET /api/v1/admin/payment-record` - Get payment records with search and pagination for administration. **Admin only**
+## 56. Admin APIs
 
-## 57. Analytics APIs
+56. `GET /api/v1/admin/users` - Get users with search and filtering for administration. **Admin only**
+57. `PATCH /api/v1/admin/users/:userId` - Update a user's status, such as banning or unbanning the user. **Admin only**
+58. `GET /api/v1/admin/technician` - Get technician users for management and outage assignment. **Admin only**
+59. `GET /api/v1/admin/payment-record` - Get payment records with search and pagination for administration. **Admin only**
 
-57. `GET /api/v1/analytics/patient-analytics` - Get outage and payment analytics for the authenticated customer. **Customer only**
-58. `GET /api/v1/analytics/technician-analytics` - Get outage assignment and status analytics for the authenticated technician. **Technician only**
-59. `GET /api/v1/analytics/admin-analytics` - Get platform-wide user, outage, payment, load-shedding, and planned-outage analytics. **Admin only**
+## 60. Analytics APIs
+
+60. `GET /api/v1/analytics/customer-analytics` - Get outage and payment analytics for the authenticated customer. **Customer only**
+61. `GET /api/v1/analytics/technician-analytics` - Get outage assignment and status analytics for the authenticated technician. **Technician only**
+62. `GET /api/v1/analytics/admin-analytics` - Get platform-wide user, outage, payment, load-shedding, and planned-outage analytics. **Admin only**
 
 All analytics endpoints return a standard success response with the report in the `data` property.
 
@@ -144,15 +148,14 @@ All analytics endpoints return a standard success response with the report in th
 | Substation | 4 |
 | Feeder | 4 |
 | Area | 4 |
-| Unexpected Outage | 8 |
+| Unexpected Outage | 10 |
 | Load Shedding | 4 |
-| Payment | 4 |
+| Payment | 5 |
 | Planned Outage | 4 |
 | Admin | 4 |
 | Analytics | 3 |
-| **Total** | **59** |
+| **Total** | **62** |
 
 ## Notes
 
-- The two `GET /api/v1/outage` registrations are listed separately because they are separate route declarations with different access rules and controller actions.
 - This document describes the routes currently registered in the source code, including endpoints whose business logic may still be incomplete.
