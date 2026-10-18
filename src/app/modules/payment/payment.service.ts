@@ -7,6 +7,7 @@ import { prisma } from "../../lib/prisma";
 import httpStatus from "http-status";
 import { OutagePriority, PaymentStatus, Role } from "../../../generated/prisma/enums";
 import config from "../../config";
+import { generateInvoicePdf } from "./payment.utils";
 
 const createPaymentInDb = async (
     outageReportId: string,
@@ -175,6 +176,12 @@ const verifySslCommerzPayment = async (
             }
 
         });
+        const invoicePdf = await generateInvoicePdf({
+    transactionId: verifiedPayment.transactionId,
+    amount: Number(verifiedPayment.amount),
+    customer: verifiedPayment.customer,
+    outage: verifiedPayment.outage,
+});
     } else if (
         paymentData.status === "FAILED" ||
         paymentData.status === "INVALID_TRANSACTION"
