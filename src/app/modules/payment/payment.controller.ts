@@ -57,7 +57,26 @@ const verifySslCommerzPayment = catchAsync(
     return res.redirect(`${config.payment_result_redirect_base_url}/cancel.html`);
   },
 );
+//download invoice 
+const downloadInvoice = catchAsync(async (req, res) => {
+    const { transId } = req.params;
 
+    // Use the authenticated user's ID, not a client-supplied customerId
+    const customerId = req.user?.userId as string;
+
+    const invoicePdf = await paymentServices.getInvoicePdf(
+        transId as string,
+        customerId,
+    );
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="invoice-${transId}.pdf"`,
+    );
+
+    res.send(invoicePdf);
+});
 //get users payment history
 
 const getCustomersPaymentHistory = catchAsync(
@@ -97,4 +116,5 @@ export const paymentController = {
   verifySslCommerzPayment,
   getCustomersPaymentHistory,
   getPaymentDetails,
+  downloadInvoice
 };

@@ -14,6 +14,13 @@ router.post("/create",auth(Role.CUSTOMER),paymentController.createPayment)
 router.post("/confirm",paymentController.verifySslCommerzPayment)
 
 
+//download invoice 
+router.get(
+    "/invoice/:transId/download",
+    auth( Role.CUSTOMER ),
+    paymentController.downloadInvoice,
+);
+
 //get payment users history
 router.get("/",auth(Role.CUSTOMER),paymentController.getCustomersPaymentHistory)
 

@@ -303,4 +303,5 @@ export const paymentServices = {
     verifySslCommerzPayment,
     paymentHistoryFromDb,
     paymentDetailsFromDb,
+    getInvoicePdf
 };
